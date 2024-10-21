@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:gravity="center"
+    android:background="#F2F2F7">
+
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="40dp"
+        android:fontFamily="@font/mallana"
+        android:gravity="center"
+        android:text="Football Player Tracker"
+        android:textColor="#333333"
+        android:textSize="25sp"
+        android:textStyle="bold"/>
+
+    <TextView
+        style="@style/Label"
+        android:id="@+id/connect_wearable_label"
+        android:text="Connect Player Wearable"
+        android:layout_marginBottom="7dp" />
+
+    <!-- Connected Device -->
+    <TextView
+        android:id="@+id/connected_device"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Connected device - AlexShirt"
+        android:textSize="18sp"
+        android:textColor="#333333"
+        android:background="#FFFFFF"
+        android:padding="12dp"
+        android:elevation="4dp"
+        android:fontFamily="@font/mallana"
+        android:layout_marginBottom="20dp"
+        android:backgroundTint="#FFFFFF"/>
+
+
+    <!-- Select Football Field Label -->
+    <TextView
+        style="@style/Label"
+        android:id="@+id/select_field_label"
+        android:text="Select Football Field"
+        android:layout_marginBottom="7dp" />
+
+    <!-- Football Field Dropdown (Spinner) -->
+    <TextView
+        android:id="@+id/selected_field"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Kunstgrasveld - University of Twente"
+        android:textSize="18sp"
+        android:textColor="#333333"
+        android:background="#FFFFFF"
+        android:padding="12dp"
+        android:elevation="4dp"
+        android:fontFamily="@font/mallana"
+        android:layout_marginBottom="30dp"
+        android:backgroundTint="#FFFFFF"/>
+
+    <!-- Start Game Session Button Label -->
+    <TextView
+        style="@style/Label"
+        android:id="@+id/start_tracking_button_label"
+        android:text="Start Game Session"
+        android:layout_marginTop="10dp"/>
+
+    <!-- Start Game Session Button -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/start_tracking_button"
+        style="@style/ActiveButton"
+        android:text="Start Tracking"
+        app:cornerRadius="16dp" />
+
+    <!-- Stop Game Session Button Label -->
+    <TextView
+        style="@style/Label"
+        android:id="@+id/stop_tracking_button_label"
+        android:text="Stop Game Session Button"
+        android:layout_marginTop="10dp"/>
+
+    <!-- Stop Game Session Button -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/stop_tracking_button"
+        style="@style/InactiveButton"
+        android:text="Stop Tracking"
+        app:cornerRadius="16dp" />
+
+    <!-- See Tracker Data Button Label -->
+    <TextView
+        style="@style/Label"
+        android:id="@+id/see_data_button_label"
+        android:layout_marginTop="10dp"
+        android:text="See Tracker Data" />
+
+    <!-- See Tracker Data Button -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/see_data_button"
+        style="@style/InactiveButton"
+        android:text="See Tracker Data"
+        app:cornerRadius="16dp" />
+
+</LinearLayout>

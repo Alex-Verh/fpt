@@ -1,0 +1,35 @@
+<resources>
+
+    <!-- Label Style -->
+    <style name="Label">
+        <item name="android:textColor">#333333</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:fontFamily">@font/mallana</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <!-- Active Button Style -->
+    <style name="ActiveButton">
+        <item name="android:backgroundTint">@color/button_active</item>
+        <item name="android:textColor">@color/button_text_active</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:fontFamily">@font/mallana</item>
+        <item name="android:padding">10dp</item>
+        <item name="android:clickable">true</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <!-- Inactive Button Style -->
+    <style name="InactiveButton">
+        <item name="android:backgroundTint">@color/button_inactive</item>
+        <item name="android:textColor">@color/button_text_inactive</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:fontFamily">@font/mallana</item>
+        <item name="android:padding">10dp</item>
+        <item name="android:clickable">false</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+</resources>
