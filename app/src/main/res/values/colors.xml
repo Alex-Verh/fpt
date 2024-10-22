@@ -15,5 +15,7 @@
     <color name="button_text_active">#99FF99</color>
     <color name="button_inactive">#676666</color>
     <color name="button_text_inactive">#FFFFFF</color>
+    <color name="player_marker_color">#FFFFFF</color>
+    <color name="navbtn">#6D6D6D</color>
 
 </resources>
