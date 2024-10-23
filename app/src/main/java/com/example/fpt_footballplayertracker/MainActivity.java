@@ -1,5 +1,6 @@
 package com.example.fpt_footballplayertracker;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -23,7 +24,20 @@ public class MainActivity extends AppCompatActivity {
             getSupportActionBar().hide();
         }
 
-        setContentView(R.layout.realtracking_patterns);
+        setContentView(R.layout.menu);
+
+        // NAVIGATION BUTTONS
+        Button startBtn = findViewById(R.id.start_tracking_button);
+        startBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, RealTimeTrackingPositioning.class);
+                startActivity(intent);
+            }
+        });
+
+        // END NAVIGATION BUTTONS
+
 
 //        connectedDevice = findViewById(R.id.connected_device);
 //        startTrackingButton = findViewById(R.id.start_tracking_button);

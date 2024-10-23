@@ -95,15 +95,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/page_description"
-        android:layout_marginTop="47dp"
+        android:layout_marginTop="4dp"
         android:layout_marginBottom="0dp"
         android:layout_weight="1"
-        android:adjustViewBounds="true"
-        android:scaleType="centerCrop"
         android:src="@drawable/football_pitch_image"
+        android:scaleType="centerCrop"
+        android:adjustViewBounds="true"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <View
         android:id="@+id/player_marker"
@@ -111,4 +111,5 @@
         android:layout_height="60dp"
         android:layout_centerInParent="true"
         android:background="@drawable/movement_pattern_arrow"/>
+
 </RelativeLayout>
