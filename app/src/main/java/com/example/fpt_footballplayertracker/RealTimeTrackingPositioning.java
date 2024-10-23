@@ -43,4 +43,32 @@ public class RealTimeTrackingPositioning extends AppCompatActivity {
 
         // END NAVIGATION BUTTONS
     }
+
+// RELATIVE POSITIONING OF THE PLAYER ON THE FOOTBALL PITCH ( THE IMAGE RELATIVE TO Kunstgrasveld Enschede)
+
+//// Assuming you have the four corner GPS coordinates:
+//double bottomLeftCorner = ...; 52.242704, 6.850216
+//double topLeftCorner  = ...; 52.243232, 6.848823
+//double topRightCorner  = ...; 52.243797, 6.849397
+//double bottomRightCorner  = ...; 552.243275, 6.850786
+//
+//// The player's current GPS coordinates:
+//double playerLat = ...; X
+//double playerLng = ...; Y
+//
+//// Image dimensions:
+//int imageWidth = imageView.getWidth();
+//int imageHeight = imageView.getHeight();
+//
+//// Calculate relative position:
+//double latFraction = ...;
+//double lngFraction = ...;
+//
+//// Convert to pixel coordinates:
+//int xPos = (int) (lngFraction * imageWidth);
+//int yPos = (int) (latFraction * imageHeight);
+//
+//// Update the player's position on the ImageView:
+//playerMarker.setX(xPos);
+//playerMarker.setY(yPos);
 }
