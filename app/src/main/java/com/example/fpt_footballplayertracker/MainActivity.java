@@ -23,8 +23,7 @@ public class MainActivity extends AppCompatActivity {
             getSupportActionBar().hide();
         }
 
-        setContentView(R.layout.realtracking_positioning);
-        setContentView(R.layout.realtracking_positioning);
+        setContentView(R.layout.realtracking_patterns);
 
 //        connectedDevice = findViewById(R.id.connected_device);
 //        startTrackingButton = findViewById(R.id.start_tracking_button);

@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F2F2F7">
+
+
+    <!--  Toolbar for back button and centered title-->
+
+
+    <!-- Header with tabs (Positioning, Statistics, Patterns) -->
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#F2F2F7"
+        android:padding="16dp">
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/mallana"
+            android:layout_gravity="center|center_vertical"
+            android:text="Real Time Tracking"
+            android:textColor="#333333"
+            android:textSize="22sp" />
+
+
+        <!-- Back button (Left aligned) -->
+        <ImageButton
+            android:id="@+id/back_button"
+            android:layout_width="30dp"
+            android:layout_height="20dp"
+            android:layout_gravity="start|center_vertical"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Back"
+            android:src="@drawable/ic_back_arrow" />
+    </androidx.appcompat.widget.Toolbar>
+
+    <LinearLayout
+        android:id="@+id/header_tabs"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="60dp">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/tab_positioning"
+            style="@style/NavigationButton"
+            android:text="Positioning"
+            app:cornerRadius="0dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/tab_statistics"
+            style="@style/NavigationButton"
+            android:text="Statistics"
+            app:cornerRadius="0dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/tab_patterns"
+            style="@style/SelectedNavigationButton"
+            android:text="Patterns"
+            app:cornerRadius="0dp" />
+    </LinearLayout>
+
+    <!-- Description below tabs -->
+    <TextView
+        android:id="@+id/page_description_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/header_tabs"
+        android:layout_marginTop="-6dp"
+        android:padding="10dp"
+        android:text="Movement Patterns"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        android:textStyle="bold"/>
+
+    <TextView
+        android:id="@+id/page_description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/header_tabs"
+        android:layout_marginTop="15dp"
+        android:padding="10dp"
+        android:text="Shows the last movement patterns of the connected player on the field."
+        android:textColor="@color/black"
+        android:textSize="16sp" />
+
+    <ImageView
+        android:id="@+id/football_pitch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/page_description"
+        android:layout_marginTop="47dp"
+        android:layout_marginBottom="0dp"
+        android:layout_weight="1"
+        android:adjustViewBounds="true"
+        android:scaleType="centerCrop"
+        android:src="@drawable/football_pitch_image"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/player_marker"
+        android:layout_width="20dp"
+        android:layout_height="60dp"
+        android:layout_centerInParent="true"
+        android:background="@drawable/movement_pattern_arrow"/>
+</RelativeLayout>
