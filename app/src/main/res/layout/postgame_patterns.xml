@@ -24,7 +24,7 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/mallana"
             android:layout_gravity="center|center_vertical"
-            android:text="Real Time Tracking"
+            android:text="Post-Game Analysis"
             android:textColor="#333333"
             android:textSize="22sp" />
 
@@ -50,7 +50,7 @@
         <com.google.android.material.button.MaterialButton
             android:id="@+id/tab_positioning"
             style="@style/NavigationButton"
-            android:text="Positioning"
+            android:text="Heat Map"
             app:cornerRadius="0dp" />
 
         <com.google.android.material.button.MaterialButton
@@ -86,7 +86,7 @@
         android:layout_below="@id/header_tabs"
         android:layout_marginTop="15dp"
         android:padding="10dp"
-        android:text="Shows the last movement patterns of the connected player on the field."
+        android:text="Shows all the movement patterns of the connected player on the field during the assigned period."
         android:textColor="@color/black"
         android:textSize="16sp" />
 

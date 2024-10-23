@@ -13,7 +13,7 @@
         android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="40dp"
+        android:layout_marginBottom="20dp"
         android:fontFamily="@font/mallana"
         android:gravity="center"
         android:text="Football Player Tracker"
@@ -62,49 +62,75 @@
         android:padding="12dp"
         android:elevation="4dp"
         android:fontFamily="@font/mallana"
-        android:layout_marginBottom="30dp"
+        android:layout_marginBottom="10dp"
         android:backgroundTint="#FFFFFF"/>
 
-    <!-- Start Game Session Button Label -->
+    <!-- See Real Time Tracking Data -->
     <TextView
         style="@style/Label"
-        android:id="@+id/start_tracking_button_label"
-        android:text="Start Game Session"
+        android:id="@+id/real_time_data_label"
+        android:text="Real Time Data"
         android:layout_marginTop="10dp"/>
 
     <!-- Start Game Session Button -->
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/start_tracking_button"
-        style="@style/ActiveButton"
-        android:text="Start Tracking"
+        android:id="@+id/real_time_data"
+        style="@style/Button"
+        android:text="Monitor Data"
         app:cornerRadius="16dp" />
 
     <!-- Stop Game Session Button Label -->
     <TextView
         style="@style/Label"
-        android:id="@+id/stop_tracking_button_label"
-        android:text="Stop Game Session Button"
+        android:id="@+id/selected_start_time_label"
+        android:text="Select Tracking Time Start"
         android:layout_marginTop="10dp"/>
 
     <!-- Stop Game Session Button -->
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/stop_tracking_button"
-        style="@style/InactiveButton"
-        android:text="Stop Tracking"
+        android:id="@+id/selected_start_time"
+        style="@style/Button"
+        android:text="Select Time"
         app:cornerRadius="16dp" />
 
     <!-- See Tracker Data Button Label -->
     <TextView
         style="@style/Label"
-        android:id="@+id/see_data_button_label"
+        android:id="@+id/selected_end_time_label"
         android:layout_marginTop="10dp"
-        android:text="See Tracker Data" />
+        android:text="Select Tracking Time End" />
 
     <!-- See Tracker Data Button -->
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/see_data_button"
+        android:id="@+id/selected_end_time"
         style="@style/InactiveButton"
-        android:text="See Tracker Data"
+        android:text="Select Time"
         app:cornerRadius="16dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_horizontal">
+
+        <!-- Reset Button -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/reset_time"
+            style="@style/InactiveButton"
+            android:text="Reset Time"
+            app:cornerRadius="16dp"
+            android:layout_weight="1"
+            android:layout_marginEnd="8dp" />
+
+        <!-- See Data Button -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/see_data"
+            style="@style/InactiveButton"
+            android:text="See Data"
+            app:cornerRadius="16dp"
+            android:layout_weight="1"
+            android:layout_marginStart="8dp" />
+    </LinearLayout>
+
 
 </LinearLayout>

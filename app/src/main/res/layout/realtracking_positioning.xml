@@ -58,12 +58,6 @@
             style="@style/NavigationButton"
             android:text="Statistics"
             app:cornerRadius="0dp" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/tab_patterns"
-            style="@style/NavigationButton"
-            android:text="Patterns"
-            app:cornerRadius="0dp" />
     </LinearLayout>
 
     <!-- Description below tabs -->

@@ -8,12 +8,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 
-public class RealTimeTrackingPatterns extends AppCompatActivity {
+public class PostGamePatterns extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.realtracking_patterns);
+        setContentView(R.layout.postgame_patterns);
 
         // Remove the ActionBar
         if (getSupportActionBar() != null) {
@@ -25,16 +25,7 @@ public class RealTimeTrackingPatterns extends AppCompatActivity {
         returnBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(RealTimeTrackingPatterns.this, MainActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        Button positioningBtn = findViewById(R.id.tab_positioning);
-        positioningBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(RealTimeTrackingPatterns.this, RealTimeTrackingPositioning.class);
+                Intent intent = new Intent(PostGamePatterns.this, MainActivity.class);
                 startActivity(intent);
             }
         });

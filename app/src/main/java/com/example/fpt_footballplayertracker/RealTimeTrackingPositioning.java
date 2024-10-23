@@ -21,6 +21,9 @@ public class RealTimeTrackingPositioning extends AppCompatActivity {
 
         setContentView(R.layout.realtracking_positioning);
 
+//        Intent intent = getIntent();
+
+//        String keyVal = intent.getStringExtra("key_name");
 
         // NAVIGATION BUTTONS
         ImageButton returnBtn = findViewById(R.id.back_button);
@@ -31,16 +34,6 @@ public class RealTimeTrackingPositioning extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
-        Button patternsBtn = findViewById(R.id.tab_patterns);
-        patternsBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(RealTimeTrackingPositioning.this, RealTimeTrackingPatterns.class);
-                startActivity(intent);
-            }
-        });
-
         // END NAVIGATION BUTTONS
     }
 
