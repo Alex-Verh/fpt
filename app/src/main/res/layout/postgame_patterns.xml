@@ -1,16 +1,10 @@
-<?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#F2F2F7">
 
-
-    <!--  Toolbar for back button and centered title-->
-
-
-    <!-- Header with tabs (Positioning, Statistics, Patterns) -->
-
+    <!-- Toolbar for back button and centered title -->
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
@@ -22,12 +16,10 @@
             android:id="@+id/title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/mallana"
             android:layout_gravity="center|center_vertical"
             android:text="Post-Game Analysis"
             android:textColor="#333333"
             android:textSize="22sp" />
-
 
         <!-- Back button (Left aligned) -->
         <ImageButton
@@ -40,6 +32,7 @@
             android:src="@drawable/ic_back_arrow" />
     </androidx.appcompat.widget.Toolbar>
 
+    <!-- Header Tabs -->
     <LinearLayout
         android:id="@+id/header_tabs"
         android:layout_width="match_parent"
@@ -48,68 +41,235 @@
         android:layout_marginTop="60dp">
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/tab_positioning"
+            android:id="@+id/tab_heatmap"
             style="@style/NavigationButton"
             android:text="Heat Map"
             app:cornerRadius="0dp" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/tab_statistics"
-            style="@style/NavigationButton"
+            style="@style/SelectedNavigationButton"
             android:text="Statistics"
             app:cornerRadius="0dp" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/tab_patterns"
-            style="@style/SelectedNavigationButton"
+            style="@style/NavigationButton"
             android:text="Patterns"
             app:cornerRadius="0dp" />
     </LinearLayout>
 
-    <!-- Description below tabs -->
-    <TextView
-        android:id="@+id/page_description_title"
+    <FrameLayout
+        android:id="@+id/content_frame"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/header_tabs"
-        android:layout_marginTop="-6dp"
-        android:padding="10dp"
-        android:text="Movement Patterns"
-        android:textColor="@color/black"
-        android:textSize="16sp"
-        android:textStyle="bold"/>
+        android:layout_marginTop="16dp">
 
-    <TextView
-        android:id="@+id/page_description"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/header_tabs"
-        android:layout_marginTop="15dp"
-        android:padding="10dp"
-        android:text="Shows all the movement patterns of the connected player on the field during the assigned period."
-        android:textColor="@color/black"
-        android:textSize="16sp" />
+        <!-- Statistics Section -->
+        <RelativeLayout
+            android:id="@+id/statistics_section"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="visible">
 
-    <ImageView
-        android:id="@+id/football_pitch"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/page_description"
-        android:layout_marginTop="4dp"
-        android:layout_marginBottom="0dp"
-        android:layout_weight="1"
-        android:src="@drawable/football_pitch_image"
-        android:scaleType="centerCrop"
-        android:adjustViewBounds="true"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+            <TextView
+                android:id="@+id/statistics_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Post Game Statistics"
+                android:textColor="#000000"
+                android:textSize="16sp"
+                android:padding="10dp"
+                android:textStyle="bold"/>
 
-    <View
-        android:id="@+id/player_marker"
-        android:layout_width="20dp"
-        android:layout_height="60dp"
-        android:layout_centerInParent="true"
-        android:background="@drawable/movement_pattern_arrow"/>
+            <!-- Statistics Rows -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
+                <!-- Top Speed -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="16dp"
+                    android:background="#D4EDDA">
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Top Speed"
+                        android:textColor="#000000"
+                        android:textSize="16sp" />
+                    <TextView
+                        android:id="@+id/topSpeed"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="16 km/h"
+                        android:textColor="#000000"
+                        android:textSize="16sp" />
+                </LinearLayout>
+
+                <!-- Average Speed -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="16dp">
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textColor="#000000"
+                        android:text="Average Speed"
+                        android:textSize="16sp" />
+                    <TextView
+                        android:id="@+id/averageSpeed"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="9 km/h"
+                        android:textColor="#000000"
+                        android:textSize="16sp" />
+                </LinearLayout>
+
+                <!-- Top Heart Rate -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="16dp"
+                    android:background="#F8D7DA">
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Top Heart Rate"
+                        android:textColor="#000000"
+                        android:textSize="16sp" />
+                    <TextView
+                        android:id="@+id/topHeartRate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="180 bpm"
+                        android:textColor="#000000"
+                        android:textSize="16sp" />
+                </LinearLayout>
+
+                <!-- Average Heart Rate -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="16dp">
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textColor="#000000"
+                        android:text="Average Heart Rate"
+                        android:textSize="16sp" />
+                    <TextView
+                        android:id="@+id/averageHeartRate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="#000000"
+                        android:text="130 bpm"
+                        android:textSize="16sp" />
+                </LinearLayout>
+
+                <!-- Total Distance Covered -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="16dp">
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textColor="#000000"
+                        android:text="Total Distance Covered"
+                        android:textSize="16sp" />
+                    <TextView
+                        android:id="@+id/totalDistanceCovered"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="#000000"
+                        android:text="6.9 km"
+                        android:textSize="16sp" />
+                </LinearLayout>
+
+                <!-- Number of Sprints -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="16dp">
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textColor="#000000"
+                        android:text="Number of Sprints"
+                        android:textSize="16sp" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="#000000"
+                        android:id="@+id/numberOfSprints"
+                        android:text="21"
+                        android:textSize="16sp" />
+                </LinearLayout>
+
+                <!-- General Well-being -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="16dp"
+                    android:background="#FFF3CD">
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textColor="#000000"
+                        android:text="General Well-being"
+                        android:textSize="16sp" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Tired"
+                        android:id="@+id/wellbeing"
+                        android:textColor="#000000"
+                        android:textSize="16sp" />
+                </LinearLayout>
+
+                <!-- Performance Result -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="16dp"
+                    android:background="#D4EDDA">
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textColor="#000000"
+                        android:text="Performance Result"
+                        android:textSize="16sp" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="9.5"
+                        android:id="@+id/performanceResult"
+                        android:textColor="#000000"
+                        android:textSize="16sp" />
+                </LinearLayout>
+
+            </LinearLayout>
+        </RelativeLayout>
+    </FrameLayout>
 </RelativeLayout>

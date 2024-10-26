@@ -29,10 +29,12 @@ public class MainActivity extends AppCompatActivity {
             getSupportActionBar().hide();
         }
 
-        setContentView(R.layout.menu);
+        setContentView(R.layout.postgame_patterns);
 
+/*
         // NAVIGATION BUTTONS
         Button startBtn = findViewById(R.id.real_time_data);
+
         startBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -55,6 +57,8 @@ public class MainActivity extends AppCompatActivity {
         seeData = findViewById(R.id.see_data);
         seeData.setOnClickListener(view -> System.out.println(startTimeSelected + endTimeSelected + dateSelected));
         // END NAVIGATION BUTTONS
+
+ */
     }
 
     private void selectTimeDateDialog(boolean isStart) {
