@@ -89,27 +89,24 @@
         android:text="Shows all the movement patterns of the connected player on the field during the assigned period."
         android:textColor="@color/black"
         android:textSize="16sp" />
-
-    <ImageView
+    <FrameLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/football_pitch"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/page_description"
+        android:layout_height="match_parent"
         android:layout_marginTop="4dp"
         android:layout_marginBottom="0dp"
+        android:layout_below="@id/page_description"
         android:layout_weight="1"
-        android:src="@drawable/football_pitch_image"
-        android:scaleType="centerCrop"
-        android:adjustViewBounds="true"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        android:adjustViewBounds="true">
 
-    <View
-        android:id="@+id/player_marker"
-        android:layout_width="20dp"
-        android:layout_height="60dp"
-        android:layout_centerInParent="true"
-        android:background="@drawable/movement_pattern_arrow"/>
-
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:src="@drawable/football_pitch_image"
+            android:scaleType="centerCrop"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+    </FrameLayout>
 </RelativeLayout>
