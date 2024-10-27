@@ -29,17 +29,16 @@ public class MainActivity extends AppCompatActivity {
             getSupportActionBar().hide();
         }
 
-        setContentView(R.layout.postgame_patterns);
+        setContentView(R.layout.menu);
 
-/*
+
         // NAVIGATION BUTTONS
         Button startBtn = findViewById(R.id.real_time_data);
 
         startBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, RealTimeTrackingPositioning.class);
-//                intent.putExtra("key_name", "key_value");
+                Intent intent = new Intent(MainActivity.this, RealTimePositioning.class);
                 startActivity(intent);
             }
         });
@@ -58,7 +57,6 @@ public class MainActivity extends AppCompatActivity {
         seeData.setOnClickListener(view -> System.out.println(startTimeSelected + endTimeSelected + dateSelected));
         // END NAVIGATION BUTTONS
 
- */
     }
 
     private void selectTimeDateDialog(boolean isStart) {

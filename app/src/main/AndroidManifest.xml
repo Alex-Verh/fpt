@@ -16,7 +16,10 @@
             android:name=".PostGamePatterns"
             android:exported="false" />
         <activity
-            android:name=".RealTimeTrackingPositioning"
+            android:name=".RealTimeStatistics"
+            android:exported="false" />
+        <activity
+            android:name=".RealTimePositioning"
             android:exported="false" />
         <activity
             android:name=".MainActivity"

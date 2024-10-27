@@ -8,7 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 
-public class RealTimeTrackingPositioning extends AppCompatActivity {
+public class RealTimePositioning extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,18 +19,25 @@ public class RealTimeTrackingPositioning extends AppCompatActivity {
             getSupportActionBar().hide();
         }
 
-        setContentView(R.layout.realtracking_positioning);
-
-//        Intent intent = getIntent();
-
-//        String keyVal = intent.getStringExtra("key_name");
+        setContentView(R.layout.realtime_positioning);
 
         // NAVIGATION BUTTONS
         ImageButton returnBtn = findViewById(R.id.back_button);
+        Button statisticsBtn = findViewById(R.id.tab_statistics);
+
         returnBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(RealTimeTrackingPositioning.this, MainActivity.class);
+                Intent intent = new Intent(RealTimePositioning.this, MainActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        statisticsBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(RealTimePositioning.this, RealTimeStatistics.class);
+//                intent.putExtra("key_name", "key_value");
                 startActivity(intent);
             }
         });
