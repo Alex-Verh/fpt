@@ -22,10 +22,19 @@ public class PostGamePatterns extends AppCompatActivity {
 
         // NAVIGATION BUTTONS
         ImageButton returnBtn = findViewById(R.id.back_button);
+        Button statisticsBtn = findViewById(R.id.tab_statistics);
+
         returnBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(PostGamePatterns.this, MainActivity.class);
+                startActivity(intent);
+            }
+        });
+        statisticsBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(PostGamePatterns.this, PostGameStatistics.class);
                 startActivity(intent);
             }
         });

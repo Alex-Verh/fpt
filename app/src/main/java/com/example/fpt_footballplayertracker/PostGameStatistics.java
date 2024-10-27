@@ -19,12 +19,12 @@ public class PostGameStatistics extends AppCompatActivity {
     private Runnable statisticsUpdater;
 
     // RealTimeStatistics variables
-    private float topSpeed = 0;
-    private float averageSpeed = 0;
-    private float topHeartRate;
-    private float averageHeartRate;
-    private float totalDistanceCovered;
-    private int numberOfSprints;
+    private float topSpeed = 16;
+    private float averageSpeed = 9;
+    private float topHeartRate = 190;
+    private float averageHeartRate = 130;
+    private float totalDistanceCovered = 6.9f;
+    private int numberOfSprints = 21;
     private String wellBeing;
     private float performance;
 
@@ -33,7 +33,7 @@ public class PostGameStatistics extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.realtime_statistics);
+        setContentView(R.layout.postgame_statistics);
 
         loadStatistics();
 
@@ -42,7 +42,7 @@ public class PostGameStatistics extends AppCompatActivity {
         }
 
         ImageButton returnBtn = findViewById(R.id.back_button);
-        Button positioningBtn = findViewById(R.id.tab_positioning);
+        Button patternsBtn = findViewById(R.id.tab_patterns);
         returnBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -52,7 +52,7 @@ public class PostGameStatistics extends AppCompatActivity {
             }
         });
 
-        positioningBtn.setOnClickListener(new View.OnClickListener() {
+        patternsBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(PostGameStatistics.this, RealTimePositioning.class);
@@ -65,63 +65,31 @@ public class PostGameStatistics extends AppCompatActivity {
         handler = new Handler();
         Random random = new Random();
 
-        statisticsUpdater = new Runnable() {
-            @SuppressLint("DefaultLocale")
-            @Override
-            public void run() {
-                adjustSpeed(15 + random.nextFloat() * 5);
-                adjustHeartRate(160 + random.nextFloat() * 40);
-                adjustDistance(random.nextFloat() * 0.1f);
-                numberOfSprints += 1;
-                wellBeing = topHeartRate > 180 ? "Warning" : "Good";
-                calculatePerformance();
+        numberOfSprints += 1;
+        wellBeing = topHeartRate > 180 ? "Warning" : "Good";
+        calculatePerformance();
 
-                TextView topSpeed = findViewById(R.id.topSpeed);
-                topSpeed.setText(String.format("%.2f km/h", PostGameStatistics.this.topSpeed));
+        TextView topSpeed = findViewById(R.id.topSpeed);
+        topSpeed.setText(String.format("%.2f km/h", PostGameStatistics.this.topSpeed));
 
-                TextView averageSpeed = findViewById(R.id.averageSpeed);
-                averageSpeed.setText(String.format("%.2f km/h", PostGameStatistics.this.averageSpeed));
+        TextView averageSpeed = findViewById(R.id.averageSpeed);
+        averageSpeed.setText(String.format("%.2f km/h", PostGameStatistics.this.averageSpeed));
 
-                TextView averageHeartRate = findViewById(R.id.averageHeartRate);
-                averageHeartRate.setText(String.format("%.2f bpm", PostGameStatistics.this.averageHeartRate));
+        TextView averageHeartRate = findViewById(R.id.averageHeartRate);
+        averageHeartRate.setText(String.format("%.2f bpm", PostGameStatistics.this.averageHeartRate));
 
-                TextView topHeartRate = findViewById(R.id.topHeartRate);
-                topHeartRate.setText(String.format("%.2f bpm", PostGameStatistics.this.topHeartRate));
+        TextView topHeartRate = findViewById(R.id.topHeart);
+        topHeartRate.setText(String.format("%.2f bpm", PostGameStatistics.this.topHeartRate));
 
-                TextView distance = findViewById(R.id.totalDistanceCovered);
-                distance.setText(String.format("%.2f km", PostGameStatistics.this.totalDistanceCovered));
+        TextView distance = findViewById(R.id.totalDistanceCovered);
+        distance.setText(String.format("%.2f km", PostGameStatistics.this.totalDistanceCovered));
 
-                TextView numberOfSprints = findViewById(R.id.numberOfSprints);
-                numberOfSprints.setText(String.valueOf(PostGameStatistics.this.numberOfSprints));
+        TextView numberOfSprints = findViewById(R.id.numberOfSprints);
+        numberOfSprints.setText(String.valueOf(PostGameStatistics.this.numberOfSprints));
 
-                TextView performance = findViewById(R.id.performanceResult);
-                performance.setText(String.valueOf(PostGameStatistics.this.performance));
+        TextView performance = findViewById(R.id.performance);
+        performance.setText(String.valueOf(PostGameStatistics.this.performance));
 
-                handler.postDelayed(this, 1000);
-            }
-        };
-
-        handler.post(statisticsUpdater);
-    }
-
-    private void adjustSpeed(float currentSpeed){
-        if(currentSpeed > topSpeed){
-            topSpeed = currentSpeed;
-        }
-
-        averageSpeed = (averageSpeed + currentSpeed) / 2;
-    }
-
-    private void adjustDistance(float newDistance){
-        totalDistanceCovered = newDistance;
-    }
-
-    private void adjustHeartRate(float currentHeartRate){
-        if(currentHeartRate > topHeartRate){
-            topHeartRate = currentHeartRate;
-        }
-
-        averageHeartRate = (averageHeartRate + currentHeartRate) / 2;
     }
 
     @SuppressLint("DefaultLocale")

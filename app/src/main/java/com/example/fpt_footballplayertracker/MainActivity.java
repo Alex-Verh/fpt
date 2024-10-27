@@ -14,6 +14,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
     private String startTimeSelected, endTimeSelected, dateSelected;
@@ -54,7 +55,17 @@ public class MainActivity extends AppCompatActivity {
         resetTime.setOnClickListener(view -> resetTimeDate());
 
         seeData = findViewById(R.id.see_data);
-        seeData.setOnClickListener(view -> System.out.println(startTimeSelected + endTimeSelected + dateSelected));
+        seeData.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!Objects.equals(startTimeSelected, "") && !Objects.equals(endTimeSelected, "") && !Objects.equals(dateSelected, "")) {
+                    Intent intent = new Intent(MainActivity.this, PostGamePatterns.class);
+                    startActivity(intent);
+                } else {
+//                  Tell that not time/date selected;
+                }
+            }
+        });
         // END NAVIGATION BUTTONS
 
     }

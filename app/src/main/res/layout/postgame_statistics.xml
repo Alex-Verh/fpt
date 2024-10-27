@@ -19,7 +19,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center|center_vertical"
             android:fontFamily="@font/mallana"
-            android:text="Real Time Tracking"
+            android:text="Post-Game Analysis"
             android:textColor="#333333"
             android:textSize="22sp" />
 
@@ -43,15 +43,21 @@
         android:layout_marginTop="60dp">
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/tab_positioning"
+            android:id="@+id/tab_heatmap"
             style="@style/NavigationButton"
-            android:text="Positioning"
+            android:text="Heat Map"
             app:cornerRadius="0dp" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/tab_statistics"
             style="@style/SelectedNavigationButton"
             android:text="Statistics"
+            app:cornerRadius="0dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/tab_patterns"
+            style="@style/NavigationButton"
+            android:text="Patterns"
             app:cornerRadius="0dp" />
     </LinearLayout>
 
@@ -63,7 +69,7 @@
         android:layout_below="@id/header_tabs"
         android:layout_marginTop="-6dp"
         android:padding="10dp"
-        android:text="Real Time Statistics"
+        android:text="Post-Game Heat Map"
         android:textColor="@color/black"
         android:textSize="16sp"
         android:textStyle="bold"/>
@@ -75,7 +81,7 @@
         android:layout_below="@id/header_tabs"
         android:layout_marginTop="15dp"
         android:padding="10dp"
-        android:text="Shows the real time statistics and overall performance metrics of the connected player."
+        android:text="Shows the overall statistics and overall performance metrics of the connected player."
         android:textColor="@color/black"
         android:textSize="16sp" />
 
@@ -105,16 +111,24 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:padding="16dp"
+                    android:padding="13dp"
                     android:background="#D4EDDA">
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="20dp"
+                        android:layout_gravity="start|center_vertical"
+                        android:layout_marginRight="10dp"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:contentDescription="Back"
+                        android:src="@drawable/topspeed" />
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:fontFamily="@font/mallana"
-                        android:text="Current Speed"
+                        android:text="Top Speed"
                         android:textColor="#000000"
-                        android:textSize="16sp" />
+                        android:textSize="20sp" />
                     <TextView
                         android:id="@+id/topSpeed"
                         android:layout_width="wrap_content"
@@ -131,7 +145,15 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:background="#FFFFFF"
-                    android:padding="16dp">
+                    android:padding="13dp">
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="20dp"
+                        android:layout_gravity="start|center_vertical"
+                        android:layout_marginRight="10dp"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:contentDescription="Back"
+                        android:src="@drawable/averagespeed" />
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -139,7 +161,7 @@
                         android:textColor="#000000"
                         android:text="Average Speed"
                         android:fontFamily="@font/mallana"
-                        android:textSize="16sp" />
+                        android:textSize="20sp" />
                     <TextView
                         android:id="@+id/averageSpeed"
                         android:layout_width="wrap_content"
@@ -155,18 +177,26 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:padding="16dp"
+                    android:padding="13dp"
                     android:background="#FFFFFF">
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="20dp"
+                        android:layout_gravity="start|center_vertical"
+                        android:layout_marginRight="10dp"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:contentDescription="Back"
+                        android:src="@drawable/heart" />
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Heart Rate"
+                        android:text="Top Heart Rate"
                         android:textColor="#000000"
                         android:fontFamily="@font/mallana"
-                        android:textSize="16sp" />
+                        android:textSize="20sp" />
                     <TextView
-                        android:id="@+id/topHeartRate"
+                        android:id="@+id/topHeart"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="180 bpm"
@@ -181,7 +211,15 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:background="#F8D7DA"
-                    android:padding="16dp">
+                    android:padding="13dp">
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="20dp"
+                        android:layout_gravity="start|center_vertical"
+                        android:layout_marginRight="10dp"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:contentDescription="Back"
+                        android:src="@drawable/averageheart" />
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -189,7 +227,7 @@
                         android:textColor="#000000"
                         android:text="Average Heart Rate"
                         android:fontFamily="@font/mallana"
-                        android:textSize="16sp" />
+                        android:textSize="20sp" />
                     <TextView
                         android:id="@+id/averageHeartRate"
                         android:layout_width="wrap_content"
@@ -206,7 +244,15 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:background="#FFFFFF"
-                    android:padding="16dp">
+                    android:padding="13dp">
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="20dp"
+                        android:layout_gravity="start|center_vertical"
+                        android:layout_marginRight="10dp"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:contentDescription="Back"
+                        android:src="@drawable/totaldistance" />
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -214,7 +260,7 @@
                         android:textColor="#000000"
                         android:text="Total Distance Covered"
                         android:fontFamily="@font/mallana"
-                        android:textSize="16sp" />
+                        android:textSize="20sp" />
                     <TextView
                         android:id="@+id/totalDistanceCovered"
                         android:layout_width="wrap_content"
@@ -231,7 +277,15 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:background="#FFFFFF"
-                    android:padding="16dp">
+                    android:padding="13dp">
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="20dp"
+                        android:layout_gravity="start|center_vertical"
+                        android:layout_marginRight="10dp"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:contentDescription="Back"
+                        android:src="@drawable/sprints" />
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -239,7 +293,7 @@
                         android:textColor="#000000"
                         android:text="Number of Sprints"
                         android:fontFamily="@font/mallana"
-                        android:textSize="16sp" />
+                        android:textSize="20sp" />
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -255,8 +309,16 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:padding="16dp"
+                    android:padding="13dp"
                     android:background="#FFF3CD">
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="20dp"
+                        android:layout_gravity="start|center_vertical"
+                        android:layout_marginRight="10dp"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:contentDescription="Back"
+                        android:src="@drawable/wellbeing" />
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -264,7 +326,7 @@
                         android:textColor="#000000"
                         android:fontFamily="@font/mallana"
                         android:text="General Well-being"
-                        android:textSize="16sp" />
+                        android:textSize="20sp" />
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -280,8 +342,16 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:padding="16dp"
+                    android:padding="13dp"
                     android:background="#D4EDDA">
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="20dp"
+                        android:layout_gravity="start|center_vertical"
+                        android:layout_marginRight="10dp"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:contentDescription="Back"
+                        android:src="@drawable/performance" />
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -289,13 +359,13 @@
                         android:fontFamily="@font/mallana"
                         android:textColor="#000000"
                         android:text="Performance Result"
-                        android:textSize="16sp" />
+                        android:textSize="20sp" />
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/mallana"
                         android:text="9.5"
-                        android:id="@+id/performanceResult"
+                        android:id="@+id/performance"
                         android:textColor="#000000"
                         android:textSize="16sp" />
                 </LinearLayout>

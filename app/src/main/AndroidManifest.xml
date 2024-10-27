@@ -16,6 +16,9 @@
             android:name=".PostGamePatterns"
             android:exported="false" />
         <activity
+            android:name=".PostGameStatistics"
+            android:exported="false" />
+        <activity
             android:name=".RealTimeStatistics"
             android:exported="false" />
         <activity
