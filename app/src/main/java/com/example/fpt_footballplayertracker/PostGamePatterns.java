@@ -30,6 +30,7 @@ public class PostGamePatterns extends AppCompatActivity {
         // NAVIGATION BUTTONS
         ImageButton returnBtn = findViewById(R.id.back_button);
         Button statisticsBtn = findViewById(R.id.tab_statistics);
+        Button heatmapBtn = findViewById(R.id.tab_heatmap);
 
         returnBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -42,6 +43,14 @@ public class PostGamePatterns extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(PostGamePatterns.this, PostGameStatistics.class);
+                startActivity(intent);
+            }
+        });
+
+        heatmapBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(PostGamePatterns.this, PostGameHeatmap.class);
                 startActivity(intent);
             }
         });

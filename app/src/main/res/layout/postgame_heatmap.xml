@@ -48,8 +48,8 @@
         android:layout_marginTop="60dp">
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/tab_heatmap"
-            style="@style/NavigationButton"
+            android:id="@+id/tab_positioning"
+            style="@style/SelectedNavigationButton"
             android:text="Heat Map"
             app:cornerRadius="0dp" />
 
@@ -61,7 +61,7 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/tab_patterns"
-            style="@style/SelectedNavigationButton"
+            style="@style/NavigationButton"
             android:text="Patterns"
             app:cornerRadius="0dp" />
     </LinearLayout>
@@ -74,7 +74,7 @@
         android:layout_below="@id/header_tabs"
         android:layout_marginTop="-6dp"
         android:padding="10dp"
-        android:text="Movement Patterns"
+        android:text="Post-Game Heat Map"
         android:textColor="@color/black"
         android:textSize="16sp"
         android:textStyle="bold"/>
@@ -86,7 +86,7 @@
         android:layout_below="@id/header_tabs"
         android:layout_marginTop="15dp"
         android:padding="10dp"
-        android:text="Shows all the movement patterns of the connected player on the field during the assigned period."
+        android:text="Shows the heat map of the connected player revealing their positioning and movement patterns."
         android:textColor="@color/black"
         android:textSize="16sp" />
     <FrameLayout

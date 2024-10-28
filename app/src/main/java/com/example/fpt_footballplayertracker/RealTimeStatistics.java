@@ -105,6 +105,9 @@ public class RealTimeStatistics extends AppCompatActivity {
                 TextView numberOfSprints = findViewById(R.id.numberOfSprints);
                 numberOfSprints.setText(String.valueOf(RealTimeStatistics.this.numberOfSprints));
 
+                TextView currentWellbeing = findViewById(R.id.wellbeing);
+                currentWellbeing.setText(String.valueOf(RealTimeStatistics.this.wellBeing));
+
                 handler.postDelayed(this, 1000);
             }
         };

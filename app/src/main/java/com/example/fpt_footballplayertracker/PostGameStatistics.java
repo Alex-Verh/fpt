@@ -43,6 +43,7 @@ public class PostGameStatistics extends AppCompatActivity {
 
         ImageButton returnBtn = findViewById(R.id.back_button);
         Button patternsBtn = findViewById(R.id.tab_patterns);
+        Button heatmapBtn = findViewById(R.id.tab_heatmap);
         returnBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -55,7 +56,15 @@ public class PostGameStatistics extends AppCompatActivity {
         patternsBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(PostGameStatistics.this, RealTimePositioning.class);
+                Intent intent = new Intent(PostGameStatistics.this, PostGamePatterns.class);
+                startActivity(intent);
+            }
+        });
+
+        heatmapBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(PostGameStatistics.this, PostGameHeatmap.class);
                 startActivity(intent);
             }
         });
@@ -89,6 +98,9 @@ public class PostGameStatistics extends AppCompatActivity {
 
         TextView performance = findViewById(R.id.performance);
         performance.setText(String.valueOf(PostGameStatistics.this.performance));
+
+        TextView currentWellbeing = findViewById(R.id.wellbeing);
+        currentWellbeing.setText(String.valueOf(PostGameStatistics.this.wellBeing));
 
     }
 
