@@ -1,61 +1,66 @@
 package com.example.fpt_footballplayertracker;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.PointF;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.FrameLayout;
-
+import android.widget.ImageButton;
+import androidx.appcompat.app.AppCompatActivity;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public class PostGameHeatmap extends AppCompatActivity {
 
+    private HeatmapOverlay heatmapOverlay;
+    private List<PointF> playerPositions;
 
-    @SuppressLint("WrongViewCast")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.postgame_heatmap);
 
-        // Remove the ActionBar
         if (getSupportActionBar() != null) {
             getSupportActionBar().hide();
         }
 
-        // NAVIGATION BUTTONS
         ImageButton returnBtn = findViewById(R.id.back_button);
         Button statisticsBtn = findViewById(R.id.tab_statistics);
         Button patternsBtn = findViewById(R.id.tab_patterns);
-        returnBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(PostGameHeatmap.this, MainActivity.class);
-                startActivity(intent);
-            }
+        returnBtn.setOnClickListener(v -> {
+            Intent intent = new Intent(PostGameHeatmap.this, MainActivity.class);
+            startActivity(intent);
         });
-        statisticsBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(PostGameHeatmap.this, PostGameStatistics.class);
-                startActivity(intent);
-            }
+        statisticsBtn.setOnClickListener(v -> {
+            Intent intent = new Intent(PostGameHeatmap.this, PostGameStatistics.class);
+            startActivity(intent);
         });
-        patternsBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(PostGameHeatmap.this, PostGamePatterns.class);
-                startActivity(intent);
-            }
+        patternsBtn.setOnClickListener(v -> {
+            Intent intent = new Intent(PostGameHeatmap.this, PostGamePatterns.class);
+            startActivity(intent);
         });
 
+        playerPositions = new ArrayList<>();
+        generateSamplePositions();
 
-        // END NAVIGATION BUTTONS
-
-
+        heatmapOverlay = new HeatmapOverlay(this, playerPositions);
+        FrameLayout pitchLayout = findViewById(R.id.football_pitch);
+        pitchLayout.addView(heatmapOverlay);
     }
 
+    private void generateSamplePositions() {
+        Random random = new Random();
+        for (int i = 0; i < 150; i++) {
+            playerPositions.add(new PointF(
+                300 + random.nextInt(100),
+                700 + random.nextInt(150)
+            ));
+        }
+    }
+
+    public void updateHeatmap(List<PointF> newPositions) {
+        heatmapOverlay.setPlayerPositions(newPositions);
+    }
 }
