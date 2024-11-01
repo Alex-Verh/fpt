@@ -6,10 +6,14 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.Random;
 
@@ -42,6 +46,9 @@ public class RealTimeStatistics extends AppCompatActivity {
             getSupportActionBar().hide();
         }
 
+        // ---------- Subscribe to MQTT updates ---------- //
+        MqttManager.getInstance(this).addTopicListener(MqttManager.PULSE_TOPIC, this::handlePulseUpdate);
+
         ImageButton returnBtn = findViewById(R.id.back_button);
         Button positioningBtn = findViewById(R.id.tab_positioning);
         returnBtn.setOnClickListener(new View.OnClickListener() {
@@ -62,6 +69,63 @@ public class RealTimeStatistics extends AppCompatActivity {
         });
     }
 
+    private void handlePulseUpdate(String payload) {
+        if (!payload.isEmpty()) {
+            try {
+                float newHeartRate = Float.parseFloat(payload.trim());
+                adjustHeartRate(newHeartRate);
+                // TODO: handle pulse data
+
+                Log.d("MQTT", "Pulse received: " + heartRate);
+            } catch (NumberFormatException e) {
+                Log.e("MQTT", "Invalid pulse data", e);
+            }
+        }
+    }
+
+    private void handleGpsUpdate(String payload) {
+        if (!payload.isEmpty()) {
+            try {
+                JSONObject jsonObject = new JSONObject(payload);
+
+                String datetimeUTC = jsonObject.getString("datetime_utc");
+                String lat = jsonObject.getString("lat");
+                String latDir = jsonObject.getString("latDir");
+                String lon = jsonObject.getString("lon");
+                String lonDir = jsonObject.getString("lonDir");
+                String speed = jsonObject.getString("speed");
+                // course is the deviation from the true north (north pole); also I think it is not working on this gps
+                String course = jsonObject.getString("course");
+                // TODO: handle gps data
+
+                Log.d("MQTT", "GPS data - Datetime: " + datetimeUTC +
+                        ", Lat: " + lat + " " + latDir + ", Lon: " + lon + " " + lonDir +
+                        ", Speed: " + speed + " m/s, Course: " + course);
+            } catch (JSONException e) {
+                Log.e("MQTT", "Invalid GPS data", e);
+            }
+        }
+    }
+
+    private void handleAccelUpdate(String payload) {
+        if (!payload.isEmpty()) {
+            try {
+                JSONObject jsonObject = new JSONObject(payload);
+
+                double accelX = jsonObject.getDouble("Ax");
+                double accelY = jsonObject.getDouble("Ax");
+                double accelZ = jsonObject.getDouble("Ax");
+                double accelMagnitude = jsonObject.getDouble("Ax");
+                // TODO: handle accelerometer data
+
+                Log.d("MQTT", "Accelerometer data - Ax: " + accelX +
+                        ", Ay: " + accelY + ", Az: " + accelZ + ", Amag: " + accelMagnitude);
+            } catch (JSONException e) {
+                Log.e("MQTT", "Invalid accelerometer data", e);
+            }
+        }
+    }
+
     public void loadStatistics() {
         handler = new Handler();
         Random random = new Random();
@@ -76,8 +140,8 @@ public class RealTimeStatistics extends AppCompatActivity {
                 adjustTopSpeed(currentSpeed);
 
 //                Randomize speed
-                heartRate = 160 + random.nextFloat() * 40;
-                adjustHeartRate(heartRate);
+//                heartRate = 160 + random.nextFloat() * 40;
+//                adjustHeartRate(heartRate);
 
 
                 adjustDistance(random.nextFloat() * 0.1f);
@@ -127,8 +191,9 @@ public class RealTimeStatistics extends AppCompatActivity {
         totalDistanceCovered = newDistance;
     }
 
-    private void adjustHeartRate(float currentHeartRate){
-        averageHeartRate = (averageHeartRate + currentHeartRate) / 2;
+    private void adjustHeartRate(float newHeartRate){
+        heartRate = newHeartRate;
+        averageHeartRate = (averageHeartRate + newHeartRate) / 2;
     }
 
     @Override
