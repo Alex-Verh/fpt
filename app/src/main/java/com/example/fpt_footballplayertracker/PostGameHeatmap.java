@@ -3,7 +3,6 @@ package com.example.fpt_footballplayertracker;
 import android.content.Intent;
 import android.graphics.PointF;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
@@ -52,10 +51,10 @@ public class PostGameHeatmap extends AppCompatActivity {
 
     private void generateSamplePositions() {
         Random random = new Random();
-        for (int i = 0; i < 150; i++) {
+        for (int i = 0; i < 60; i++) {
             playerPositions.add(new PointF(
-                300 + random.nextInt(100),
-                700 + random.nextInt(150)
+                300 + random.nextInt(500),
+                700 + random.nextInt(550)
             ));
         }
     }

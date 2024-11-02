@@ -33,25 +33,36 @@ public class HeatmapOverlay extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+
         for (PointF position : playerPositions) {
-            paint.setColor(Color.argb(10, 255, 0, 0));
-            canvas.drawCircle(position.x, position.y, 100, paint);
+            int density = calculateDensity(position);
+            int colorIntensity = Math.min(255, density * 20);
 
-            paint.setColor(Color.argb(30, 255, 0, 0));
-            canvas.drawCircle(position.x, position.y, 70, paint);
+            if (density > 5) {
+                paint.setColor(Color.argb(colorIntensity, 255, 0, 0));
+            } else {
+                paint.setColor(Color.argb(colorIntensity / 2, 0, 255, 0));
+            }
 
-            paint.setColor(Color.argb(60, 255, 0, 0));
-            canvas.drawCircle(position.x, position.y, 50, paint);
-
-            paint.setColor(Color.argb(100, 255, 0, 0));
-            canvas.drawCircle(position.x, position.y, 30, paint);
-
-            paint.setColor(Color.argb(50, 0, 255, 0));
-            canvas.drawCircle(position.x, position.y, 90, paint);
-
-            paint.setColor(Color.argb(10, 0, 255, 0));
-            canvas.drawCircle(position.x, position.y, 50, paint);
+            for (int i = 3; i >= 1; i--) {
+                paint.setAlpha(colorIntensity / i);
+                canvas.drawCircle(position.x, position.y, 30 * i, paint);
+            }
         }
+    }
+
+    private int calculateDensity(PointF position) {
+        int density = 0;
+        for (PointF otherPosition : playerPositions) {
+            if (otherPosition != position && distance(position, otherPosition) < 100) {
+                density++;
+            }
+        }
+        return density;
+    }
+
+    private float distance(PointF p1, PointF p2) {
+        return (float) Math.sqrt(Math.pow(p1.x - p2.x, 2) + Math.pow(p1.y - p2.y, 2));
     }
 
     public void setPlayerPositions(List<PointF> positions) {
