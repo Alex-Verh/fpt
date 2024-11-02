@@ -60,9 +60,12 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (!Objects.equals(startTimeSelected, "") && !Objects.equals(endTimeSelected, "") && !Objects.equals(dateSelected, "")) {
                     Intent intent = new Intent(MainActivity.this, PostGamePatterns.class);
+
+                    intent.putExtra("EXTRA_START_TIME", startTimeSelected);
+                    intent.putExtra("EXTRA_END_TIME", endTimeSelected);
+                    intent.putExtra("EXTRA_DATE", dateSelected);
+
                     startActivity(intent);
-                } else {
-//                  Tell that not time/date selected;
                 }
             }
         });

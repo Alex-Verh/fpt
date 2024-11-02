@@ -1,26 +1,50 @@
 package com.example.fpt_footballplayertracker;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.FrameLayout;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.MarkerOptions;
+
 import java.util.Random;
 
-public class PostGamePatterns extends AppCompatActivity {
-
+public class PostGamePatterns extends AppCompatActivity implements OnMapReadyCallback {
+    private final double[] bottomLeftCorner = {52.242704, 6.850216};
+    private final double[] topLeftCorner = {52.243232, 6.848823};
+    private final double[] topRightCorner = {52.243797, 6.849397};
+    private final double[] bottomRightCorner = {52.243275, 6.850786};
     private FrameLayout footballPitch;
+    int footballPitchWidth;
+    int footballPitchHeight;
+    private GoogleMap mMap;
 
     @SuppressLint("WrongViewCast")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.postgame_patterns);
+
+        // Get times
+        Intent intent = getIntent();
+        String startTime = intent.getStringExtra("EXTRA_START_TIME");
+        String endTime = intent.getStringExtra("EXTRA_END_TIME");
+        String date = intent.getStringExtra("EXTRA_DATE");
 
         // Remove the ActionBar
         if (getSupportActionBar() != null) {
@@ -58,49 +82,68 @@ public class PostGamePatterns extends AppCompatActivity {
         // END NAVIGATION BUTTONS
 
 
-
-//        Randomizing movement patterns
         footballPitch = findViewById(R.id.football_pitch);
 
-        footballPitch.post(() -> {
-            int containerWidth = footballPitch.getWidth();
-            int containerHeight = footballPitch.getHeight();
+        footballPitch.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                // Ensure the layout is measured once and remove the listener
+                footballPitchWidth = footballPitch.getWidth();
+                footballPitchHeight = footballPitch.getHeight();
 
-            for (int i = 0; i < 25; i++) {
-                addRandomMarker(containerWidth, containerHeight);
+                if (footballPitchWidth > 0 && footballPitchHeight > 0) {
+                    footballPitch.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                }
             }
         });
+
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.map);
+        assert mapFragment != null;
+        mapFragment.getMapAsync(this);
     }
 
-    private void addRandomMarker(int maxWidth, int maxHeight) {
-        // Create a new View (marker)
-        View marker = new View(this);
-        marker.setLayoutParams(new FrameLayout.LayoutParams(45, 100)); // Width and height of marker
-        marker.setBackgroundResource(R.drawable.movement_pattern_arrow);
+    private void addMarker(double latitude, double longitude) {
+        LatLng position = new LatLng(latitude, longitude);
 
-        // Define the area within the ImageView (e.g., 80% of the width and height, centered)
-        float widthLimit = 0.7f * maxWidth;
-        float heightLimit = 0.7f * maxHeight;
+        MarkerOptions markerOptions = new MarkerOptions()
+                .position(position)
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.movement_pattern_arrow))
+                .anchor(0.5f, 0.5f);
 
-        // Calculate starting points to center the markers within this limited area
-        float xStart = (maxWidth - widthLimit) / 2;
-        float yStart = (maxHeight - heightLimit) / 2;
+        mMap.addMarker(markerOptions);
+    }
 
-        // Generate random x and y within the limited width and height range
-        Random random = new Random();
-        float randomX = xStart + random.nextFloat() * widthLimit;
-        float randomY = yStart + random.nextFloat() * heightLimit;
 
-        // Generate a random rotation angle between 0 and 360 degrees
-        float randomRotation = random.nextInt(360);
-        marker.setRotation(randomRotation);  // Apply the random rotation
+    @Override
+    public void onMapReady(@NonNull GoogleMap googleMap) {
+        mMap = googleMap;
 
-        // Position the marker
-        marker.setX(randomX);
-        marker.setY(randomY);
+        LatLng bottomLeft = new LatLng(bottomLeftCorner[0], bottomLeftCorner[1]);
+        LatLng topLeft = new LatLng(topLeftCorner[0], topLeftCorner[1]);
+        LatLng topRight = new LatLng(topRightCorner[0], topRightCorner[1]);
+        LatLng bottomRight = new LatLng(bottomRightCorner[0], bottomRightCorner[1]);
 
-        // Add the marker to the FrameLayout (overlaying the ImageView)
-        footballPitch.addView(marker);
+        LatLngBounds.Builder builder = new LatLngBounds.Builder();
+        builder.include(bottomLeft);
+        builder.include(topLeft);
+        builder.include(topRight);
+        builder.include(bottomRight);
+        LatLngBounds bounds = builder.build();
+
+        LatLng centerPoint = bounds.getCenter();
+        float zoomLevel = 18.9f;
+        int rotationAngle = -60;
+
+
+        CameraPosition cameraPosition = new CameraPosition.Builder()
+                .target(centerPoint)
+                .zoom(zoomLevel)
+                .bearing(rotationAngle)
+                .tilt(0)
+                .build();
+
+        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
     }
 
 }

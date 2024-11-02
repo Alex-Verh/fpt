@@ -143,7 +143,6 @@ public class RealTimePositioning extends AppCompatActivity implements OnMapReady
         });
     }
 
-
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
         mMap = googleMap;
@@ -162,11 +161,13 @@ public class RealTimePositioning extends AppCompatActivity implements OnMapReady
 
         LatLng centerPoint = bounds.getCenter();
         float zoomLevel = 18.9f;
+        int rotationAngle = -60;
+
 
         CameraPosition cameraPosition = new CameraPosition.Builder()
                 .target(centerPoint)
                 .zoom(zoomLevel)
-                .bearing(-60)
+                .bearing(rotationAngle)
                 .tilt(0)
                 .build();
 
