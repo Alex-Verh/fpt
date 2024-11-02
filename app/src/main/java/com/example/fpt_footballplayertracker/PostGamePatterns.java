@@ -41,10 +41,10 @@ public class PostGamePatterns extends AppCompatActivity implements OnMapReadyCal
         setContentView(R.layout.postgame_patterns);
 
         // Get times
-        Intent intent = getIntent();
-        String startTime = intent.getStringExtra("EXTRA_START_TIME");
-        String endTime = intent.getStringExtra("EXTRA_END_TIME");
-        String date = intent.getStringExtra("EXTRA_DATE");
+        Intent intentExtra = getIntent();
+        String startTime = intentExtra.getStringExtra("EXTRA_START_TIME");
+        String endTime = intentExtra.getStringExtra("EXTRA_END_TIME");
+        String date = intentExtra.getStringExtra("EXTRA_DATE");
 
         // Remove the ActionBar
         if (getSupportActionBar() != null) {
@@ -67,6 +67,11 @@ public class PostGamePatterns extends AppCompatActivity implements OnMapReadyCal
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(PostGamePatterns.this, PostGameStatistics.class);
+
+                intent.putExtra("EXTRA_START_TIME", startTime);
+                intent.putExtra("EXTRA_END_TIME", endTime);
+                intent.putExtra("EXTRA_DATE", date);
+
                 startActivity(intent);
             }
         });
@@ -75,6 +80,11 @@ public class PostGamePatterns extends AppCompatActivity implements OnMapReadyCal
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(PostGamePatterns.this, PostGameHeatmap.class);
+
+                intent.putExtra("EXTRA_START_TIME", startTime);
+                intent.putExtra("EXTRA_END_TIME", endTime);
+                intent.putExtra("EXTRA_DATE", date);
+
                 startActivity(intent);
             }
         });
@@ -103,17 +113,17 @@ public class PostGamePatterns extends AppCompatActivity implements OnMapReadyCal
         mapFragment.getMapAsync(this);
     }
 
-    private void addMarker(double latitude, double longitude) {
+    private void addMarker(double latitude, double longitude, float rotation) {
         LatLng position = new LatLng(latitude, longitude);
 
         MarkerOptions markerOptions = new MarkerOptions()
                 .position(position)
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.movement_pattern_arrow))
-                .anchor(0.5f, 0.5f);
+                .anchor(0.5f, 0.5f)
+                .rotation(rotation);
 
         mMap.addMarker(markerOptions);
     }
-
 
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {

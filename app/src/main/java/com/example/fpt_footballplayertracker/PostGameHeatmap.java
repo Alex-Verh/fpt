@@ -21,6 +21,12 @@ public class PostGameHeatmap extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.postgame_heatmap);
 
+        // Get times
+        Intent intentExtra = getIntent();
+        String startTime = intentExtra.getStringExtra("EXTRA_START_TIME");
+        String endTime = intentExtra.getStringExtra("EXTRA_END_TIME");
+        String date = intentExtra.getStringExtra("EXTRA_DATE");
+
         if (getSupportActionBar() != null) {
             getSupportActionBar().hide();
         }
@@ -28,16 +34,28 @@ public class PostGameHeatmap extends AppCompatActivity {
         ImageButton returnBtn = findViewById(R.id.back_button);
         Button statisticsBtn = findViewById(R.id.tab_statistics);
         Button patternsBtn = findViewById(R.id.tab_patterns);
+
         returnBtn.setOnClickListener(v -> {
             Intent intent = new Intent(PostGameHeatmap.this, MainActivity.class);
             startActivity(intent);
         });
+
         statisticsBtn.setOnClickListener(v -> {
             Intent intent = new Intent(PostGameHeatmap.this, PostGameStatistics.class);
+
+            intent.putExtra("EXTRA_START_TIME", startTime);
+            intent.putExtra("EXTRA_END_TIME", endTime);
+            intent.putExtra("EXTRA_DATE", date);
+
             startActivity(intent);
         });
         patternsBtn.setOnClickListener(v -> {
             Intent intent = new Intent(PostGameHeatmap.this, PostGamePatterns.class);
+
+            intent.putExtra("EXTRA_START_TIME", startTime);
+            intent.putExtra("EXTRA_END_TIME", endTime);
+            intent.putExtra("EXTRA_DATE", date);
+
             startActivity(intent);
         });
 

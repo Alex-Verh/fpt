@@ -35,6 +35,11 @@ public class PostGameStatistics extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.postgame_statistics);
 
+        Intent intentExtra = getIntent();
+        String startTime = intentExtra.getStringExtra("EXTRA_START_TIME");
+        String endTime = intentExtra.getStringExtra("EXTRA_END_TIME");
+        String date = intentExtra.getStringExtra("EXTRA_DATE");
+
         loadStatistics();
 
         if (getSupportActionBar() != null) {
@@ -57,6 +62,11 @@ public class PostGameStatistics extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(PostGameStatistics.this, PostGamePatterns.class);
+
+                intent.putExtra("EXTRA_START_TIME", startTime);
+                intent.putExtra("EXTRA_END_TIME", endTime);
+                intent.putExtra("EXTRA_DATE", date);
+
                 startActivity(intent);
             }
         });
@@ -65,6 +75,11 @@ public class PostGameStatistics extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(PostGameStatistics.this, PostGameHeatmap.class);
+
+                intent.putExtra("EXTRA_START_TIME", startTime);
+                intent.putExtra("EXTRA_END_TIME", endTime);
+                intent.putExtra("EXTRA_DATE", date);
+
                 startActivity(intent);
             }
         });
