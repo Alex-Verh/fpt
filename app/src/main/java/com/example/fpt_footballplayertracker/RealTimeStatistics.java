@@ -30,11 +30,21 @@ public class RealTimeStatistics extends AppCompatActivity {
     private double heartRate;
     private double averageHeartRate;
 
+    private boolean firstDistUpdate = true;
+    private double lastLat = 0;
+    private double lastLon = 0;
     private double totalDistanceCovered;
     private int numberOfSprints;
     private String wellBeing;
 
+    private static final long SPRINT_COOLDOWN = 1000; // 1 second
+    private long lastSprintTime = 0; // long for milliseconds
+
     private static final double SPRINT_THRESHOLD = 1;
+
+    private double latestLat, latestLon;
+    private double latestCourse;
+    private DatabaseHelper dbHelper;
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -52,6 +62,9 @@ public class RealTimeStatistics extends AppCompatActivity {
         MqttManager.getInstance(this).addTopicListener(MqttManager.PULSE_TOPIC, this::handlePulseUpdate);
         MqttManager.getInstance(this).addTopicListener(MqttManager.ACCEL_TOPIC, this::handleAccelUpdate);
         MqttManager.getInstance(this).addTopicListener(MqttManager.GPS_TOPIC, this::handleGpsUpdate);
+
+        // ---------- Initialize DB Helper ---------- //
+        dbHelper = new DatabaseHelper(this);
 
         ImageButton returnBtn = findViewById(R.id.back_button);
         Button positioningBtn = findViewById(R.id.tab_positioning);
@@ -93,20 +106,24 @@ public class RealTimeStatistics extends AppCompatActivity {
                 JSONObject jsonObject = new JSONObject(payload);
 
                 String datetimeUTC = jsonObject.getString("datetime_utc");
-                String lat = jsonObject.getString("lat");
+                double lat = jsonObject.getDouble("lat");
                 String latDir = jsonObject.getString("lat_dir");
-                String lon = jsonObject.getString("lon");
+                double lon = jsonObject.getDouble("lon");
                 String lonDir = jsonObject.getString("lon_dir");
-                double speed = Double.parseDouble(jsonObject.getString("speed"));
+                double speed = jsonObject.getDouble("speed");
                 // course is the deviation from the true north (north pole); also I think it is not working on this gps
-                String course = jsonObject.getString("course");
+                latestCourse = jsonObject.getDouble("course");
 
+                // used for sprint storage in db
+                latestLat = lat;
+                latestLon = lon;
+
+                adjustDistance(lat, lon);
                 adjustSpeed(speed);
-                // TODO: handle gps data
 
-                Log.d("MQTT", "GPS data - Datetime: " + datetimeUTC +
+                Log.d("MQTT-GPS", "GPS data - Datetime: " + datetimeUTC +
                         ", Lat: " + lat + " " + latDir + ", Lon: " + lon + " " + lonDir +
-                        ", Speed: " + speed + " m/s, Course: " + course);
+                        ", Speed: " + speed + " m/s, <- COURSE: " + latestCourse + " ->");
             } catch (JSONException e) {
                 Log.e("MQTT", "Invalid GPS data", e);
             }
@@ -147,7 +164,7 @@ public class RealTimeStatistics extends AppCompatActivity {
 //                currentSpeed = 15 + random.nextFloat() * 5;
 //                adjustTopSpeed(currentSpeed);
 
-                adjustDistance(random.nextFloat() * 0.1f);
+//                adjustDistance(random.nextFloat() * 0.1f);
 //                numberOfSprints += 1;
                 wellBeing = averageHeartRate > 180 ? "Warning" : "Good";
 
@@ -182,9 +199,43 @@ public class RealTimeStatistics extends AppCompatActivity {
         handler.post(statisticsUpdater);
     }
 
+    private void adjustDistance(double newLat, double newLon) {
+        if (newLat == 0d || newLon == 0d) {
+            return;
+        }
+
+        if (firstDistUpdate) {
+            firstDistUpdate = false;
+        } else {
+            double distance = calculateDistance(lastLat, lastLon, newLat, newLon);
+            totalDistanceCovered += distance;
+        }
+
+        Log.d("DISTANCE", "Coords: (" + lastLat + ", " + lastLon + ") vs (" + newLat + ", " + newLon + ")");
+
+        lastLat = newLat;
+        lastLon = newLon;
+    }
+
+    private double calculateDistance(double lat1, double lon1, double lat2, double lon2) {
+        final int R = 6371000; // earth radius in meters
+        double dLat = Math.toRadians(lat2 - lat1);
+        double dLon = Math.toRadians(lon2 - lon1);
+        double a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2)) *
+                        Math.sin(dLon / 2) * Math.sin(dLon / 2);
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+//        return R * c; // dist in meters
+        return R * c / 1000d; // dist in km
+    }
+
     private void adjustSprints(double accelMagnitude) {
-        if (accelMagnitude > SPRINT_THRESHOLD) {
+        long currentTime = System.currentTimeMillis();
+        if (accelMagnitude > SPRINT_THRESHOLD && (currentTime - lastSprintTime) > SPRINT_COOLDOWN) {
+            dbHelper.insertSprintsData(latestLat, latestLon, latestCourse);
+            Log.d("SPRINTS", "Inserted in db: " + latestLat + ", " + latestLon + ", " + latestCourse);
             numberOfSprints++;
+            lastSprintTime = currentTime;
             Log.d("MQTT", "Increased nr of sprints: " + accelMagnitude);
         }
     }
@@ -196,10 +247,6 @@ public class RealTimeStatistics extends AppCompatActivity {
             topSpeed = currentSpeed;
         }
         averageSpeed = (averageSpeed + currentSpeed) / 2;
-    }
-
-    private void adjustDistance(double newDistance) {
-        totalDistanceCovered = newDistance;
     }
 
     private void adjustHeartRate(double newHeartRate){

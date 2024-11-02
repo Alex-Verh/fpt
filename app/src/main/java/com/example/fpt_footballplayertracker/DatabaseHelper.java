@@ -14,12 +14,13 @@ import java.util.TimeZone;
 public class DatabaseHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "fpt_data.db";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 3;
 
     // table names
     public static final String TABLE_GPS = "gps_data";
     public static final String TABLE_ACCEL = "accel_data";
     public static final String TABLE_PULSE = "pulse_data";
+    public static final String TABLE_SPRINTS = "sprints";
 
     // common columns
     public static final String COLUMN_TIMESTAMP = "timestamp";
@@ -41,22 +42,31 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     // pulse data
     public static final String COLUMN_PULSE_RATE = "pulse_rate";
 
-
     public DatabaseHelper(Context ctx) {
         super(ctx, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
+        createGpsTable(db);
+        createAccelTable(db);
+        createPulseTable(db);
+        createSprintsTable(db);
+    }
+
+    private void createGpsTable(SQLiteDatabase db) {
         String createGpsTable = "CREATE TABLE " + TABLE_GPS + " (" +
                 COLUMN_TIMESTAMP + " INTEGER PRIMARY KEY, " +
-                COLUMN_LAT + " TEXT, " +
+                COLUMN_LAT + " REAL, " +
                 COLUMN_LAT_DIR + " TEXT, " +
-                COLUMN_LON + " TEXT, " +
+                COLUMN_LON + " REAL, " +
                 COLUMN_LON_DIR + " TEXT, " +
-                COLUMN_SPEED + " REAL)";
+                COLUMN_SPEED + " REAL, " +
+                COLUMN_COURSE + " REAL)";
         db.execSQL(createGpsTable);
+    }
 
+    private void createAccelTable(SQLiteDatabase db) {
         String createAccelTable = "CREATE TABLE " + TABLE_ACCEL + " (" +
                 COLUMN_TIMESTAMP + " INTEGER PRIMARY KEY, " +
                 COLUMN_ACCEL_X + " REAL, " +
@@ -64,11 +74,22 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 COLUMN_ACCEL_Z + " REAL, " +
                 COLUMN_ACCEL_MAGNITUDE + " REAL)";
         db.execSQL(createAccelTable);
+    }
 
+    private void createPulseTable(SQLiteDatabase db) {
         String createPulseTable = "CREATE TABLE " + TABLE_PULSE + " (" +
                 COLUMN_TIMESTAMP + " INTEGER PRIMARY KEY, " +
                 COLUMN_PULSE_RATE + " REAL)";
         db.execSQL(createPulseTable);
+    }
+
+    private void createSprintsTable(SQLiteDatabase db) {
+        String createSprintsTable = "CREATE TABLE " + TABLE_SPRINTS + " (" +
+                COLUMN_TIMESTAMP + " INTEGER PRIMARY KEY, " +
+                COLUMN_LAT + " TEXT, " +
+                COLUMN_LON + " TEXT, " +
+                COLUMN_COURSE + " REAL)";
+        db.execSQL(createSprintsTable);
     }
 
     @Override
@@ -76,7 +97,21 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_GPS);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_ACCEL);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_PULSE);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_SPRINTS);
         onCreate(db);
+    }
+
+    public void insertSprintsData(double lat, double lon, double course) {
+        try {
+            long timestamp = System.currentTimeMillis();
+            SQLiteDatabase db = this.getWritableDatabase();
+            String insertSprintData = "INSERT OR REPLACE INTO " + TABLE_SPRINTS + " (" +
+                    COLUMN_TIMESTAMP + ", " + COLUMN_LAT + ", " + COLUMN_LON + ", " + COLUMN_COURSE + ") VALUES (?, ?, ?, ?)";
+            db.execSQL(insertSprintData, new Object[]{timestamp, lat, lon, course});
+            db.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void insertGpsData(String payload) {
