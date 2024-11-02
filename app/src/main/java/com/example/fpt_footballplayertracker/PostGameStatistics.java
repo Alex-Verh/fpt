@@ -70,6 +70,7 @@ public class PostGameStatistics extends AppCompatActivity {
         });
     }
 
+    @SuppressLint("DefaultLocale")
     public void loadStatistics() {
         handler = new Handler();
         Random random = new Random();

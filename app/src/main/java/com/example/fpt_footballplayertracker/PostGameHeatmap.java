@@ -56,6 +56,10 @@ public class PostGameHeatmap extends AppCompatActivity {
                 300 + random.nextInt(500),
                 700 + random.nextInt(550)
             ));
+            playerPositions.add(new PointF(
+                    500 + random.nextInt(100),
+                    800 + random.nextInt(150)
+            ));
         }
     }
 
