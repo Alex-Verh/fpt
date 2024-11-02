@@ -23,16 +23,18 @@ public class RealTimeStatistics extends AppCompatActivity {
     private Runnable statisticsUpdater;
 
     // RealTimeStatistics variables
-    private float topSpeed = 0;
-    private float currentSpeed;
-    private float averageSpeed = 0;
+    private double topSpeed = 0;
+    private double currentSpeed;
+    private double averageSpeed = 0;
 
-    private float heartRate;
-    private float averageHeartRate;
+    private double heartRate;
+    private double averageHeartRate;
 
-    private float totalDistanceCovered;
+    private double totalDistanceCovered;
     private int numberOfSprints;
     private String wellBeing;
+
+    private static final double SPRINT_THRESHOLD = 1;
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -48,6 +50,8 @@ public class RealTimeStatistics extends AppCompatActivity {
 
         // ---------- Subscribe to MQTT updates ---------- //
         MqttManager.getInstance(this).addTopicListener(MqttManager.PULSE_TOPIC, this::handlePulseUpdate);
+        MqttManager.getInstance(this).addTopicListener(MqttManager.ACCEL_TOPIC, this::handleAccelUpdate);
+        MqttManager.getInstance(this).addTopicListener(MqttManager.GPS_TOPIC, this::handleGpsUpdate);
 
         ImageButton returnBtn = findViewById(R.id.back_button);
         Button positioningBtn = findViewById(R.id.tab_positioning);
@@ -72,7 +76,7 @@ public class RealTimeStatistics extends AppCompatActivity {
     private void handlePulseUpdate(String payload) {
         if (!payload.isEmpty()) {
             try {
-                float newHeartRate = Float.parseFloat(payload.trim());
+                double newHeartRate = Double.parseDouble(payload.trim());
                 adjustHeartRate(newHeartRate);
                 // TODO: handle pulse data
 
@@ -90,12 +94,14 @@ public class RealTimeStatistics extends AppCompatActivity {
 
                 String datetimeUTC = jsonObject.getString("datetime_utc");
                 String lat = jsonObject.getString("lat");
-                String latDir = jsonObject.getString("latDir");
+                String latDir = jsonObject.getString("lat_dir");
                 String lon = jsonObject.getString("lon");
-                String lonDir = jsonObject.getString("lonDir");
-                String speed = jsonObject.getString("speed");
+                String lonDir = jsonObject.getString("lon_dir");
+                double speed = Double.parseDouble(jsonObject.getString("speed"));
                 // course is the deviation from the true north (north pole); also I think it is not working on this gps
                 String course = jsonObject.getString("course");
+
+                adjustSpeed(speed);
                 // TODO: handle gps data
 
                 Log.d("MQTT", "GPS data - Datetime: " + datetimeUTC +
@@ -116,6 +122,8 @@ public class RealTimeStatistics extends AppCompatActivity {
                 double accelY = jsonObject.getDouble("Ax");
                 double accelZ = jsonObject.getDouble("Ax");
                 double accelMagnitude = jsonObject.getDouble("Ax");
+
+                adjustSprints(accelMagnitude);
                 // TODO: handle accelerometer data
 
                 Log.d("MQTT", "Accelerometer data - Ax: " + accelX +
@@ -136,16 +144,11 @@ public class RealTimeStatistics extends AppCompatActivity {
             public void run() {
 
 //                Randomize speed
-                currentSpeed = 15 + random.nextFloat() * 5;
-                adjustTopSpeed(currentSpeed);
-
-//                Randomize speed
-//                heartRate = 160 + random.nextFloat() * 40;
-//                adjustHeartRate(heartRate);
-
+//                currentSpeed = 15 + random.nextFloat() * 5;
+//                adjustTopSpeed(currentSpeed);
 
                 adjustDistance(random.nextFloat() * 0.1f);
-                numberOfSprints += 1;
+//                numberOfSprints += 1;
                 wellBeing = averageHeartRate > 180 ? "Warning" : "Good";
 
                 TextView currentSpeedText = findViewById(R.id.currentSpeed);
@@ -179,19 +182,27 @@ public class RealTimeStatistics extends AppCompatActivity {
         handler.post(statisticsUpdater);
     }
 
-    private void adjustTopSpeed(float currentSpeed){
-        if(currentSpeed > topSpeed){
+    private void adjustSprints(double accelMagnitude) {
+        if (accelMagnitude > SPRINT_THRESHOLD) {
+            numberOfSprints++;
+            Log.d("MQTT", "Increased nr of sprints: " + accelMagnitude);
+        }
+    }
+
+    private void adjustSpeed(double newSpeed) {
+        currentSpeed = newSpeed;
+
+        if (currentSpeed > topSpeed){
             topSpeed = currentSpeed;
         }
-
         averageSpeed = (averageSpeed + currentSpeed) / 2;
     }
 
-    private void adjustDistance(float newDistance){
+    private void adjustDistance(double newDistance) {
         totalDistanceCovered = newDistance;
     }
 
-    private void adjustHeartRate(float newHeartRate){
+    private void adjustHeartRate(double newHeartRate){
         heartRate = newHeartRate;
         averageHeartRate = (averageHeartRate + newHeartRate) / 2;
     }
