@@ -1,22 +1,34 @@
 package com.example.fpt_footballplayertracker;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
+
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Arrays;
 
-public class RealTimePositioning extends AppCompatActivity {
+public class RealTimePositioning extends AppCompatActivity implements OnMapReadyCallback {
 
     // RELATIVE POSITIONING OF THE PLAYER ON THE FOOTBALL PITCH ( THE IMAGE RELATIVE TO Kunstgrasveld Enschede)
     private final double[] bottomLeftCorner = {52.242704, 6.850216};
@@ -24,10 +36,13 @@ public class RealTimePositioning extends AppCompatActivity {
     private final double[] topRightCorner = {52.243797, 6.849397};
     private final double[] bottomRightCorner = {52.243275, 6.850786};
 
-    //// The player's current GPS coordinates:
+    // The player's current GPS coordinates:
     double playerLat;
     double playerLng;
-
+    FrameLayout footballPitch;
+    int footballPitchWidth;
+    int footballPitchHeight;
+    private GoogleMap mMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +78,25 @@ public class RealTimePositioning extends AppCompatActivity {
         // END NAVIGATION BUTTONS
 
         // MQTT
+        footballPitch = findViewById(R.id.football_pitch);
+
+        footballPitch.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                // Ensure the layout is measured once and remove the listener
+                footballPitchWidth = footballPitch.getWidth();
+                footballPitchHeight = footballPitch.getHeight();
+
+                if (footballPitchWidth > 0 && footballPitchHeight > 0) {
+                    footballPitch.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                }
+            }
+        });
+
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
+
         MqttManager.getInstance(this).addTopicListener(MqttManager.GPS_TOPIC, this::handleGpsUpdate);
     }
 
@@ -90,38 +124,52 @@ public class RealTimePositioning extends AppCompatActivity {
         }
     }
 
-    private double[] getRelativePosition(double playerLat, double playerLng) {
-        double latRangeTop = topLeftCorner[0] - bottomLeftCorner[0];
-        double lngRangeLeft = topLeftCorner[1] - bottomLeftCorner[1];
-
-        double latRatio = (playerLat - bottomLeftCorner[0]) / latRangeTop;
-        double lngRatio = (playerLng - bottomLeftCorner[1]) / lngRangeLeft;
-
-        latRatio = Math.min(Math.max(latRatio, 0), 1);
-        lngRatio = Math.min(Math.max(lngRatio, 0), 1);
-
-        return new double[]{latRatio, lngRatio};
-    }
-
-    private int[] getImageCoordinates(double playerLat, double playerLng, int imageWidth, int imageHeight) {
-        double[] relativePos = getRelativePosition(playerLat, playerLng);
-        int x = (int) (relativePos[1] * imageWidth);
-        int y = (int) ((1 - relativePos[0]) * imageHeight);
-
-        return new int[]{x, y};
-    }
-
     private void updatePlayerMarker(double playerLat, double playerLng) {
-        View playerView = findViewById(R.id.player_marker);
+        final LatLng playerPosition = new LatLng(playerLat, playerLng);
 
-        FrameLayout footballPitch = findViewById(R.id.football_pitch);
-        int footballPitchWidth = footballPitch.getWidth();
-        int footballPitchHeight = footballPitch.getHeight();
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                View playerMarker = findViewById(R.id.player_marker);
+                playerMarker.setVisibility(View.VISIBLE);
 
-        int[] coordinates = getImageCoordinates(playerLat, playerLng, footballPitchWidth, footballPitchHeight);
-        playerView.setX(coordinates[0]);
-        playerView.setY(coordinates[1]);
+                Point markerScreenPosition = mMap.getProjection().toScreenLocation(playerPosition);
+
+                FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) playerMarker.getLayoutParams();
+                params.leftMargin = markerScreenPosition.x - (playerMarker.getWidth() / 2);
+                params.topMargin = markerScreenPosition.y - (playerMarker.getHeight() / 2);
+                playerMarker.setLayoutParams(params);
+            }
+        });
     }
 
 
+    @Override
+    public void onMapReady(@NonNull GoogleMap googleMap) {
+        mMap = googleMap;
+
+        LatLng bottomLeft = new LatLng(bottomLeftCorner[0], bottomLeftCorner[1]);
+        LatLng topLeft = new LatLng(topLeftCorner[0], topLeftCorner[1]);
+        LatLng topRight = new LatLng(topRightCorner[0], topRightCorner[1]);
+        LatLng bottomRight = new LatLng(bottomRightCorner[0], bottomRightCorner[1]);
+
+        LatLngBounds.Builder builder = new LatLngBounds.Builder();
+        builder.include(bottomLeft);
+        builder.include(topLeft);
+        builder.include(topRight);
+        builder.include(bottomRight);
+        LatLngBounds bounds = builder.build();
+
+        LatLng centerPoint = bounds.getCenter();
+        float zoomLevel = 18.9f;
+
+        CameraPosition cameraPosition = new CameraPosition.Builder()
+                .target(centerPoint)
+                .zoom(zoomLevel)
+                .bearing(-60)
+                .tilt(0)
+                .build();
+
+        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition)); // Animate to rotation
+    }
 }
