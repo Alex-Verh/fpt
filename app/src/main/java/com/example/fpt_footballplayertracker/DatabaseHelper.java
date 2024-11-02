@@ -1,6 +1,7 @@
 package com.example.fpt_footballplayertracker;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
@@ -185,5 +186,33 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public Cursor getGpsData(long startTime, long stopTime) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT * FROM " + TABLE_GPS + " WHERE " +
+                COLUMN_TIMESTAMP + " BETWEEN ? AND ?";
+        return db.rawQuery(query, new String[]{String.valueOf(startTime), String.valueOf(stopTime)});
+    }
+
+    public Cursor getAccelData(long startTime, long stopTime) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT * FROM " + TABLE_ACCEL + " WHERE " +
+                COLUMN_TIMESTAMP + " BETWEEN ? AND ?";
+        return db.rawQuery(query, new String[]{String.valueOf(startTime), String.valueOf(stopTime)});
+    }
+
+    public Cursor getPulseData(long startTime, long stopTime) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT * FROM " + TABLE_PULSE + " WHERE " +
+                COLUMN_TIMESTAMP + " BETWEEN ? AND ?";
+        return db.rawQuery(query, new String[]{String.valueOf(startTime), String.valueOf(stopTime)});
+    }
+
+    public Cursor getSprintsData(long startTime, long stopTime) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT * FROM " + TABLE_SPRINTS + " WHERE " +
+                COLUMN_TIMESTAMP + " BETWEEN ? AND ?";
+        return db.rawQuery(query, new String[]{String.valueOf(startTime), String.valueOf(stopTime)});
     }
 }

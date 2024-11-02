@@ -28,6 +28,7 @@ public class PostGameStatistics extends AppCompatActivity {
     private String wellBeing;
     private float performance;
 
+    private DatabaseHelper dbHelper;
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -35,7 +36,15 @@ public class PostGameStatistics extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.postgame_statistics);
 
+        Intent intent = getIntent();
+        String startTime = intent.getStringExtra("EXTRA_START_TIME");
+        String endTime = intent.getStringExtra("EXTRA_END_TIME");
+        String date = intent.getStringExtra("EXTRA_DATE");
+
         loadStatistics();
+
+        // ---------- Initialize DB Helper ---------- //
+        dbHelper = new DatabaseHelper(this);
 
         if (getSupportActionBar() != null) {
             getSupportActionBar().hide();

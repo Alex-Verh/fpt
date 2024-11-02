@@ -67,6 +67,11 @@ public class PostGamePatterns extends AppCompatActivity implements OnMapReadyCal
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(PostGamePatterns.this, PostGameStatistics.class);
+
+                intent.putExtra("EXTRA_START_TIME", startTime);
+                intent.putExtra("EXTRA_END_TIME", endTime);
+                intent.putExtra("EXTRA_DATE", date);
+
                 startActivity(intent);
             }
         });
