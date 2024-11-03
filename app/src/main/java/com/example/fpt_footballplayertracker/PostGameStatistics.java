@@ -4,14 +4,18 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import java.util.Random;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.TimeZone;
 
 public class PostGameStatistics extends AppCompatActivity {
 
@@ -19,12 +23,12 @@ public class PostGameStatistics extends AppCompatActivity {
     private Runnable statisticsUpdater;
 
     // RealTimeStatistics variables
-    private float topSpeed = 16;
-    private float averageSpeed = 9;
-    private float topHeartRate = 190;
-    private float averageHeartRate = 130;
-    private float totalDistanceCovered = 6.9f;
-    private int numberOfSprints = 21;
+    private double topSpeed;
+    private double averageSpeed;
+    private double topHeartRate;
+    private double averageHeartRate;
+    private double totalDistanceCovered;
+    private int numberOfSprints;
     private String wellBeing;
     private float performance;
 
@@ -41,10 +45,41 @@ public class PostGameStatistics extends AppCompatActivity {
         String endTime = intent.getStringExtra("EXTRA_END_TIME");
         String date = intent.getStringExtra("EXTRA_DATE");
 
-        loadStatistics();
-
         // ---------- Initialize DB Helper ---------- //
         dbHelper = new DatabaseHelper(this);
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        sdf.setTimeZone(TimeZone.getTimeZone("UTC")); // set timezone to UTC
+
+        long startTimestamp = 0;
+        long endTimestamp = 0;
+
+        try {
+            // transform date format to "yyyy-MM-dd" and append the start and end times
+            String[] parts = date.split("/"); // Split the date by "/"
+            String formattedDate = parts[2] + "-" + parts[1] + "-" + parts[0];
+
+            String formattedStartTime = formattedDate + " " + startTime + ":00";
+            String formattedEndTime = formattedDate + " " + endTime + ":00";
+
+            Log.d("POST-GPS", "Formatted time: " + formattedStartTime + ", " + formattedEndTime);
+
+            // Parse the date and time to get milliseconds
+            startTimestamp = sdf.parse(formattedStartTime).getTime();
+            endTimestamp = sdf.parse(formattedEndTime).getTime();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        // actually get data from db and process it
+        loadGpsData(startTimestamp, endTimestamp);
+        loadPulseData(startTimestamp, endTimestamp);
+        loadSprintsData(startTimestamp, endTimestamp);
+
+        Log.d("POST-GPS", "Hello! " + startTime + "-" + endTime + " " + date);
+
+        // mainly displays data
+        loadStatistics();
 
         if (getSupportActionBar() != null) {
             getSupportActionBar().hide();
@@ -89,12 +124,114 @@ public class PostGameStatistics extends AppCompatActivity {
         });
     }
 
+    private void loadGpsData(long startTimestamp, long endTimestamp) {
+        Log.d("POST-GPS", "Milliseconds: " + startTimestamp + ", " + endTimestamp);
+
+        // speed helper var
+        int speedCounter = 0;
+        double totalSpeed = 0d;
+
+        // distance helper vars
+        double previousLat = 0d;
+        double previousLon = 0d;
+        boolean firstEntry = true;
+
+        // get gps data from db
+        Cursor cursor = dbHelper.getGpsData(startTimestamp, endTimestamp); // Assuming this returns a Cursor
+        if (cursor != null) {
+            while (cursor.moveToNext()) {
+                long timestamp = cursor.getLong(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_TIMESTAMP));
+                double lat = cursor.getDouble(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_LAT));
+                String latDir = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_LAT_DIR));
+                double lon = cursor.getDouble(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_LON));
+                String lonDir = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_LON_DIR));
+                double speed = cursor.getDouble(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_SPEED));
+                double course = cursor.getDouble(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_COURSE));
+
+                // top speed
+                if (speed > topSpeed) {
+                    topSpeed = speed;
+                }
+
+                // average speed
+                speedCounter++;
+                totalSpeed += speed;
+
+                // top total distance covered
+                if (!firstEntry) {
+                    double distance = RealTimeStatistics.calculateDistance(previousLat, previousLon, lat, lon);
+                    totalDistanceCovered += distance;
+                } else {
+                    firstEntry = false;
+                }
+
+                previousLat = lat;
+                previousLon = lon;
+
+                // Print the retrieved data
+                Log.d("POST-GPS", "Timestamp: " + timestamp + ", Lat: " + lat + " " + latDir +
+                        ", Lon: " + lon + " " + lonDir + ", Speed: " + speed +
+                        " km/h, Course: " + course);
+            }
+            cursor.close();
+
+            // speed average
+            if (speedCounter > 0) {
+                averageSpeed = totalSpeed / speedCounter;
+            }
+        }
+    }
+
+    private void loadSprintsData(long startTimestamp, long endTimestamp) {
+        Cursor cursor = dbHelper.getSprintsData(startTimestamp, endTimestamp);
+        if (cursor != null) {
+            numberOfSprints = cursor.getCount();
+            cursor.close();
+            Log.d("POST-SPRINTS", "Number of sprints: " + numberOfSprints);
+        } else {
+            Log.d("POST-SPRINTS", "Cursor is null, no sprints found.");
+        }
+    }
+
+    private void loadPulseData(long startTimestamp, long endTimestamp) {
+a        double totalPulseRate = 0d;
+        int pulseCounter = 0;
+
+        Cursor cursor = dbHelper.getPulseData(startTimestamp, endTimestamp);
+        if (cursor != null) {
+            while (cursor.moveToNext()) {
+                long timestamp = cursor.getLong(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_TIMESTAMP));
+                double pulseRate = cursor.getDouble(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_PULSE_RATE));
+
+
+                // top pulse
+                if (pulseRate > topHeartRate) {
+                    topHeartRate = pulseRate;
+                }
+
+                // avg pulse
+                totalPulseRate += pulseRate;
+                pulseCounter++;
+
+                Log.d("POST-PULSE", "Timestamp: " + timestamp + ", Pulse Rate: " + pulseRate);
+            }
+            Log.d("POST-PULSE", "Nr of pulse rows: " + cursor.getCount());
+            cursor.close();
+
+            if (pulseCounter > 0) {
+                averageHeartRate = totalPulseRate / pulseCounter;
+            }
+        } else {
+            Log.d("POST-PULSE", "Null pulse cursor!");
+        }
+    }
+
     @SuppressLint("DefaultLocale")
     public void loadStatistics() {
         handler = new Handler();
-        Random random = new Random();
+//        Random random = new Random();
 
-        numberOfSprints += 1;
+//        numberOfSprints += 1;
         wellBeing = topHeartRate > 180 ? "Warning" : "Good";
         calculatePerformance();
 

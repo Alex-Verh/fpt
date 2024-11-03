@@ -217,7 +217,7 @@ public class RealTimeStatistics extends AppCompatActivity {
         lastLon = newLon;
     }
 
-    private double calculateDistance(double lat1, double lon1, double lat2, double lon2) {
+    public static double calculateDistance(double lat1, double lon1, double lat2, double lon2) {
         final int R = 6371000; // earth radius in meters
         double dLat = Math.toRadians(lat2 - lat1);
         double dLon = Math.toRadians(lon2 - lon1);
