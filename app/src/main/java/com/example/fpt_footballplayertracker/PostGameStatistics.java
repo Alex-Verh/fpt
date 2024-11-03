@@ -194,7 +194,7 @@ public class PostGameStatistics extends AppCompatActivity {
     }
 
     private void loadPulseData(long startTimestamp, long endTimestamp) {
-a        double totalPulseRate = 0d;
+        double totalPulseRate = 0d;
         int pulseCounter = 0;
 
         Cursor cursor = dbHelper.getPulseData(startTimestamp, endTimestamp);
@@ -202,7 +202,6 @@ a        double totalPulseRate = 0d;
             while (cursor.moveToNext()) {
                 long timestamp = cursor.getLong(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_TIMESTAMP));
                 double pulseRate = cursor.getDouble(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_PULSE_RATE));
-
 
                 // top pulse
                 if (pulseRate > topHeartRate) {
