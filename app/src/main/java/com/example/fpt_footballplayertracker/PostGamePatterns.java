@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -29,6 +30,7 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.GroundOverlayOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.SphericalUtil;
 
@@ -193,6 +195,18 @@ public class PostGamePatterns extends AppCompatActivity implements OnMapReadyCal
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
         mMap = googleMap;
+
+        try {
+            // Apply the custom style from the JSON file
+            boolean success = mMap.setMapStyle(
+                    MapStyleOptions.loadRawResourceStyle(this, R.raw.map_style));
+
+            if (!success) {
+                Log.e("MapStyle", "Style parsing failed.");
+            }
+        } catch (Resources.NotFoundException e) {
+            Log.e("MapStyle", "Can't find style. Error: ", e);
+        }
 
         LatLng bottomLeft = new LatLng(bottomLeftCorner[0], bottomLeftCorner[1]);
         LatLng topLeft = new LatLng(topLeftCorner[0], topLeftCorner[1]);
