@@ -5,7 +5,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.Button;
@@ -33,6 +35,9 @@ public class PostGamePatterns extends AppCompatActivity implements OnMapReadyCal
     int footballPitchWidth;
     int footballPitchHeight;
     private GoogleMap mMap;
+    private DatabaseHelper dbHelper;
+    long startTimestamp;
+    long endTimestamp;
 
     @SuppressLint("WrongViewCast")
     @Override
@@ -45,6 +50,15 @@ public class PostGamePatterns extends AppCompatActivity implements OnMapReadyCal
         String startTime = intentExtra.getStringExtra("EXTRA_START_TIME");
         String endTime = intentExtra.getStringExtra("EXTRA_END_TIME");
         String date = intentExtra.getStringExtra("EXTRA_DATE");
+
+        // ---------- Initialize DB Helper ---------- //
+        dbHelper = new DatabaseHelper(this);
+
+        long[] timeStamps = PostGameStatistics.convertTimestamps(startTime, endTime, date);
+        startTimestamp = timeStamps[0];
+        endTimestamp = timeStamps[1];
+
+//        loadSprintsData(startTimestamp, endTimestamp);
 
         // Remove the ActionBar
         if (getSupportActionBar() != null) {
@@ -113,6 +127,22 @@ public class PostGamePatterns extends AppCompatActivity implements OnMapReadyCal
         mapFragment.getMapAsync(this);
     }
 
+    private void loadSprintsData(long startTimestamp, long endTimestamp) {
+        Cursor cursor = dbHelper.getSprintsData(startTimestamp, endTimestamp);
+        if (cursor != null) {
+
+            while (cursor.moveToNext()) {
+                double lat = cursor.getDouble(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_LAT));
+                double lon = cursor.getDouble(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_LON));
+                float course = cursor.getFloat(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_COURSE));
+
+                Log.d("POST-SPRINT", "Marker data: " + lat + ", " + lon + ", " + course);
+                addMarker(lat, lon, course);
+            }
+            cursor.close();
+        }
+    }
+
     private void addMarker(double latitude, double longitude, float rotation) {
         LatLng position = new LatLng(latitude, longitude);
 
@@ -154,6 +184,9 @@ public class PostGamePatterns extends AppCompatActivity implements OnMapReadyCal
                 .build();
 
         mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+
+        // add markers
+        loadSprintsData(startTimestamp, endTimestamp);
     }
 
 }

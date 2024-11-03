@@ -48,28 +48,9 @@ public class PostGameStatistics extends AppCompatActivity {
         // ---------- Initialize DB Helper ---------- //
         dbHelper = new DatabaseHelper(this);
 
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        sdf.setTimeZone(TimeZone.getTimeZone("UTC")); // set timezone to UTC
-
-        long startTimestamp = 0;
-        long endTimestamp = 0;
-
-        try {
-            // transform date format to "yyyy-MM-dd" and append the start and end times
-            String[] parts = date.split("/"); // Split the date by "/"
-            String formattedDate = parts[2] + "-" + parts[1] + "-" + parts[0];
-
-            String formattedStartTime = formattedDate + " " + startTime + ":00";
-            String formattedEndTime = formattedDate + " " + endTime + ":00";
-
-            Log.d("POST-GPS", "Formatted time: " + formattedStartTime + ", " + formattedEndTime);
-
-            // Parse the date and time to get milliseconds
-            startTimestamp = sdf.parse(formattedStartTime).getTime();
-            endTimestamp = sdf.parse(formattedEndTime).getTime();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+        long[] timeStamps = convertTimestamps(startTime, endTime, date);
+        long startTimestamp = timeStamps[0];
+        long endTimestamp = timeStamps[1];
 
         // actually get data from db and process it
         loadGpsData(startTimestamp, endTimestamp);
@@ -122,6 +103,34 @@ public class PostGameStatistics extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+    }
+
+    public static long[] convertTimestamps(String startTime, String endTime, String date) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        sdf.setTimeZone(TimeZone.getTimeZone("UTC")); // set timezone to UTC
+
+        long startTimestamp = 0;
+        long endTimestamp = 0;
+
+        try {
+            // transform date format to "yyyy-MM-dd" and append the start and end times
+            String[] parts = date.split("/"); // Split the date by "/"
+            String formattedDate = parts[2] + "-" + parts[1] + "-" + parts[0];
+
+            String formattedStartTime = formattedDate + " " + startTime + ":00";
+            String formattedEndTime = formattedDate + " " + endTime + ":00";
+
+            Log.d("POST-GPS", "Formatted time: " + formattedStartTime + ", " + formattedEndTime);
+
+            // Parse the date and time to get milliseconds
+            startTimestamp = sdf.parse(formattedStartTime).getTime();
+            endTimestamp = sdf.parse(formattedEndTime).getTime();
+
+            return new long[]{startTimestamp, endTimestamp};
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return new long[]{0, 0};
+        }
     }
 
     private void loadGpsData(long startTimestamp, long endTimestamp) {
