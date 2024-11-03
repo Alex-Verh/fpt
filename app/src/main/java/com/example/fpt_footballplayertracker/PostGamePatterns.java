@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -13,18 +14,18 @@ import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.Projection;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
-import com.google.android.gms.maps.model.MarkerOptions;
+import android.widget.FrameLayout.LayoutParams;
 
-import java.util.Random;
 
 public class PostGamePatterns extends AppCompatActivity implements OnMapReadyCallback {
     private final double[] bottomLeftCorner = {52.242704, 6.850216};
@@ -54,6 +55,7 @@ public class PostGamePatterns extends AppCompatActivity implements OnMapReadyCal
         // ---------- Initialize DB Helper ---------- //
         dbHelper = new DatabaseHelper(this);
 
+        assert date != null;
         long[] timeStamps = PostGameStatistics.convertTimestamps(startTime, endTime, date);
         startTimestamp = timeStamps[0];
         endTimestamp = timeStamps[1];
@@ -137,22 +139,34 @@ public class PostGamePatterns extends AppCompatActivity implements OnMapReadyCal
                 float course = cursor.getFloat(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_COURSE));
 
                 Log.d("POST-SPRINT", "Marker data: " + lat + ", " + lon + ", " + course);
-                addMarker(lat, lon, course);
+                addMarkerOnOverlay(lat, lon, course);
             }
             cursor.close();
         }
     }
 
-    private void addMarker(double latitude, double longitude, float rotation) {
+    private void addMarkerOnOverlay(double latitude, double longitude, float rotation) {
+        // Convert latitude and longitude to screen coordinates
         LatLng position = new LatLng(latitude, longitude);
+        Projection projection = mMap.getProjection();
+        Point screenPoint = projection.toScreenLocation(position);
 
-        MarkerOptions markerOptions = new MarkerOptions()
-                .position(position)
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.movement_pattern_arrow))
-                .anchor(0.5f, 0.5f)
-                .rotation(rotation);
+        // Create a new ImageView for the marker
+        ImageView markerImage = new ImageView(this);
+        markerImage.setImageResource(R.drawable.movement_pattern_arrow);
+        markerImage.setRotation(rotation);
 
-        mMap.addMarker(markerOptions);
+        // Set the position of the marker
+        LayoutParams layoutParams = new LayoutParams(
+                LayoutParams.WRAP_CONTENT,
+                LayoutParams.WRAP_CONTENT
+        );
+        layoutParams.leftMargin = screenPoint.x - (markerImage.getDrawable().getIntrinsicWidth() / 2);
+        layoutParams.topMargin = screenPoint.y - (markerImage.getDrawable().getIntrinsicHeight() / 2);
+        markerImage.setLayoutParams(layoutParams);
+
+        // Add the marker ImageView to the FrameLayout on top of the overlay image
+        footballPitch.addView(markerImage);
     }
 
     @Override

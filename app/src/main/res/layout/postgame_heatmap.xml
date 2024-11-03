@@ -99,6 +99,12 @@
         android:layout_weight="1"
         android:adjustViewBounds="true">
 
+        <fragment
+            android:id="@+id/map"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -107,5 +113,6 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
     </FrameLayout>
 </RelativeLayout>
