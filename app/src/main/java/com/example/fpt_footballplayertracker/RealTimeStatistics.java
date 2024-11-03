@@ -37,7 +37,7 @@ public class RealTimeStatistics extends AppCompatActivity {
     private int numberOfSprints;
     private String wellBeing;
 
-    private static final long SPRINT_COOLDOWN = 1000; // 1 second
+    private static final long SPRINT_COOLDOWN = 2000; // 1 second
     private long lastSprintTime = 0; // long for milliseconds
 
     private static final double SPRINT_THRESHOLD = 1;

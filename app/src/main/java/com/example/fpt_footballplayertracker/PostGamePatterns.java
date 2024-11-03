@@ -30,6 +30,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import android.widget.FrameLayout.LayoutParams;
 
+import org.json.JSONObject;
+
 
 public class PostGamePatterns extends AppCompatActivity implements OnMapReadyCallback {
 //    private final double[] bottomLeftCorner = {52.242704, 6.850216};
@@ -62,6 +64,12 @@ private final double[] bottomLeftCorner = {52.226655975016556, 6.864790760263467
 
         // ---------- Initialize DB Helper ---------- //
         dbHelper = new DatabaseHelper(this);
+        // TODO: remove this line
+//        dbHelper.insertSprintsData(52.242377856892794, 6.851441534664767, 0);
+//        dbHelper.insertSprintsData(52.24260281282532, 6.851509809267719, 60);
+//        dbHelper.insertSprintsData(52.242708322737094, 6.851925959228571, 270);
+//        dbHelper.insertSprintsData(52.242659176468024, 6.851195827314727, 210);
+//        dbHelper.insertSprintsData(52.24255734963551, 6.850664749975794, 0);
 
         assert date != null;
         long[] timeStamps = PostGameStatistics.convertTimestamps(startTime, endTime, date);
