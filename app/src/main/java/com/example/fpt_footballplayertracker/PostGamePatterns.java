@@ -5,7 +5,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.util.Log;
@@ -21,12 +24,15 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.Projection;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.GroundOverlayOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.maps.android.SphericalUtil;
 
 import android.widget.FrameLayout.LayoutParams;
 
@@ -34,18 +40,32 @@ import org.json.JSONObject;
 
 
 public class PostGamePatterns extends AppCompatActivity implements OnMapReadyCallback {
-//    private final double[] bottomLeftCorner = {52.242704, 6.850216};
-//    private final double[] topLeftCorner = {52.243232, 6.848823};
-//    private final double[] topRightCorner = {52.243797, 6.849397};
-//    private final double[] bottomRightCorner = {52.243275, 6.850786};
-private final double[] bottomLeftCorner = {52.226655975016556, 6.8647907602634675};
-    private final double[] topLeftCorner = {52.22667979791006, 6.864679448598995};
-    private final double[] topRightCorner = {52.22672415774671, 6.864711635104385};
-    private final double[] bottomRightCorner = {52.226698691919985, 6.864817582351293};
+//    Kunstgrasveld
+    private final double[] bottomLeftCorner = {52.242704, 6.850216};
+    private final double[] topLeftCorner = {52.243232, 6.848823};
+    private final double[] topRightCorner = {52.243797, 6.849397};
+    private final double[] bottomRightCorner = {52.243275, 6.850786};
+
+    //    Natural grass field
+//    private final double[] bottomLeftCorner = {52.24220658064753, 6.851613173106319};
+//    private final double[] topLeftCorner = {52.24269782485437, 6.850296926995616};
+//    private final double[] topRightCorner = {52.24322738698686, 6.850835563732699};
+//    private final double[] bottomRightCorner = {52.24273847129517, 6.8521556030598605};
+
+
+
+    // ION ograda
+//    private final double[] bottomLeftCorner = {52.226655975016556, 6.8647907602634675};
+//    private final double[] topLeftCorner = {52.22667979791006, 6.864679448598995};
+//    private final double[] topRightCorner = {52.22672415774671, 6.864711635104385};
+//    private final double[] bottomRightCorner = {52.226698691919985, 6.864817582351293};
+
     private FrameLayout footballPitch;
     int footballPitchWidth;
     int footballPitchHeight;
     private GoogleMap mMap;
+    float zoomLevel = 18.5f;
+    int rotationAngle = -60;
     private DatabaseHelper dbHelper;
     long startTimestamp;
     long endTimestamp;
@@ -65,6 +85,13 @@ private final double[] bottomLeftCorner = {52.226655975016556, 6.864790760263467
         // ---------- Initialize DB Helper ---------- //
         dbHelper = new DatabaseHelper(this);
         // TODO: remove this line
+//        dbHelper.insertSprintsData(52.242377856892794, 6.851441534664767, 0);
+//        dbHelper.insertSprintsData(52.24260281282532, 6.851509809267719, 60);
+//        dbHelper.insertSprintsData(52.242708322737094, 6.851925959228571, 270);
+//        dbHelper.insertSprintsData(52.242659176468024, 6.851195827314727, 210);
+//        dbHelper.insertSprintsData(52.24255734963551, 6.850664749975794, 0);
+
+
 //        dbHelper.insertSprintsData(52.242377856892794, 6.851441534664767, 0);
 //        dbHelper.insertSprintsData(52.24260281282532, 6.851509809267719, 60);
 //        dbHelper.insertSprintsData(52.242708322737094, 6.851925959228571, 270);
@@ -168,7 +195,7 @@ private final double[] bottomLeftCorner = {52.226655975016556, 6.864790760263467
                 .position(position)
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.movement_pattern_arrow))
                 .anchor(0.5f, 0.5f)
-                .rotation(rotation);
+                .rotation(rotation - rotationAngle);
 
         mMap.addMarker(markerOptions);
     }
@@ -177,22 +204,22 @@ private final double[] bottomLeftCorner = {52.226655975016556, 6.864790760263467
     public void onMapReady(@NonNull GoogleMap googleMap) {
         mMap = googleMap;
 
+        try {
+            // Apply the custom style from the JSON file
+            boolean success = mMap.setMapStyle(
+                    MapStyleOptions.loadRawResourceStyle(this, R.raw.map_style));
+
+            if (!success) {
+                Log.e("MapStyle", "Style parsing failed.");
+            }
+        } catch (Resources.NotFoundException e) {
+            Log.e("MapStyle", "Can't find style. Error: ", e);
+        }
+
         LatLng bottomLeft = new LatLng(bottomLeftCorner[0], bottomLeftCorner[1]);
         LatLng topLeft = new LatLng(topLeftCorner[0], topLeftCorner[1]);
         LatLng topRight = new LatLng(topRightCorner[0], topRightCorner[1]);
         LatLng bottomRight = new LatLng(bottomRightCorner[0], bottomRightCorner[1]);
-
-        LatLngBounds footballFieldBounds = new LatLngBounds(
-                new LatLng(bottomLeftCorner[0], bottomLeftCorner[1]),  // southwest corner
-                new LatLng(topRightCorner[0], topRightCorner[1])       // northeast corner
-        );
-
-        GroundOverlayOptions footballOverlay = new GroundOverlayOptions()
-                .image(BitmapDescriptorFactory.fromResource(R.drawable.football_field_image))
-                .positionFromBounds(footballFieldBounds)
-                .transparency(0.3f);
-
-        mMap.addGroundOverlay(footballOverlay);
 
         LatLngBounds.Builder builder = new LatLngBounds.Builder();
         builder.include(bottomLeft);
@@ -202,9 +229,6 @@ private final double[] bottomLeftCorner = {52.226655975016556, 6.864790760263467
         LatLngBounds bounds = builder.build();
 
         LatLng centerPoint = bounds.getCenter();
-        float zoomLevel = 18.9f;
-        int rotationAngle = -60;
-
 
         CameraPosition cameraPosition = new CameraPosition.Builder()
                 .target(centerPoint)
@@ -213,7 +237,38 @@ private final double[] bottomLeftCorner = {52.226655975016556, 6.864790760263467
                 .tilt(0)
                 .build();
 
-        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition), new GoogleMap.CancelableCallback() {
+            @Override
+            public void onFinish() {
+                LatLngBounds visibleBounds = mMap.getProjection().getVisibleRegion().latLngBounds;
+
+                double visibleHeight = SphericalUtil.computeDistanceBetween(
+                        visibleBounds.southwest, new LatLng(visibleBounds.northeast.latitude, visibleBounds.southwest.longitude));
+
+                Bitmap overlayBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.football_field_image);
+                double aspectRatio = (double) overlayBitmap.getWidth() / overlayBitmap.getHeight();
+
+                double overlayWidth = visibleHeight * aspectRatio;
+
+                GroundOverlayOptions footballOverlay = new GroundOverlayOptions()
+                        .image(BitmapDescriptorFactory.fromBitmap(overlayBitmap))
+                        .position(centerPoint, (float) overlayWidth, (float) visibleHeight)
+                        .bearing(rotationAngle);
+
+                mMap.addGroundOverlay(footballOverlay);
+            }
+
+            @Override
+            public void onCancel() {
+            }
+        });
+
+//      Unable zoom and scroll on map
+        UiSettings uiSettings = mMap.getUiSettings();
+        uiSettings.setZoomGesturesEnabled(false);
+        uiSettings.setScrollGesturesEnabled(false);
+        uiSettings.setRotateGesturesEnabled(false);
+        uiSettings.setTiltGesturesEnabled(false);
 
         // add markers
         loadSprintsData(startTimestamp, endTimestamp);

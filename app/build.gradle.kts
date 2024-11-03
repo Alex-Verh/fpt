@@ -44,4 +44,5 @@ dependencies {
     androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
     implementation("com.hivemq:hivemq-mqtt-client:1.3.3")
     implementation("com.google.android.gms:play-services-maps:19.0.0")
+    implementation("com.google.maps.android:android-maps-utils:2.2.5")
 }

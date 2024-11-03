@@ -18,6 +18,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
@@ -31,15 +32,32 @@ import java.util.Arrays;
 public class RealTimePositioning extends AppCompatActivity implements OnMapReadyCallback {
 
     // RELATIVE POSITIONING OF THE PLAYER ON THE FOOTBALL PITCH ( THE IMAGE RELATIVE TO Kunstgrasveld Enschede)
+//    Kunstgrasveld
     private final double[] bottomLeftCorner = {52.242704, 6.850216};
     private final double[] topLeftCorner = {52.243232, 6.848823};
     private final double[] topRightCorner = {52.243797, 6.849397};
     private final double[] bottomRightCorner = {52.243275, 6.850786};
 
+    //    Natural grass field
+//    private final double[] bottomLeftCorner = {52.24220658064753, 6.851613173106319};
+//    private final double[] topLeftCorner = {52.24269782485437, 6.850296926995616};
+//    private final double[] topRightCorner = {52.24322738698686, 6.850835563732699};
+//    private final double[] bottomRightCorner = {52.24273847129517, 6.8521556030598605};
+
+
+
+    // ION ograda
+//    private final double[] bottomLeftCorner = {52.226655975016556, 6.8647907602634675};
+//    private final double[] topLeftCorner = {52.22667979791006, 6.864679448598995};
+//    private final double[] topRightCorner = {52.22672415774671, 6.864711635104385};
+//    private final double[] bottomRightCorner = {52.226698691919985, 6.864817582351293};
+
     // The player's current GPS coordinates:
     double playerLat;
     double playerLng;
     FrameLayout footballPitch;
+    float zoomLevel = 18.5f;
+    int rotationAngle = -60;
     int footballPitchWidth;
     int footballPitchHeight;
     private GoogleMap mMap;
@@ -160,9 +178,6 @@ public class RealTimePositioning extends AppCompatActivity implements OnMapReady
         LatLngBounds bounds = builder.build();
 
         LatLng centerPoint = bounds.getCenter();
-        float zoomLevel = 18.9f;
-        int rotationAngle = -60;
-
 
         CameraPosition cameraPosition = new CameraPosition.Builder()
                 .target(centerPoint)
@@ -171,6 +186,13 @@ public class RealTimePositioning extends AppCompatActivity implements OnMapReady
                 .tilt(0)
                 .build();
 
-        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition)); // Animate to rotation
+        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+
+        //  Unable zoom and scroll on map
+        UiSettings uiSettings = mMap.getUiSettings();
+        uiSettings.setZoomGesturesEnabled(false);
+        uiSettings.setScrollGesturesEnabled(false);
+        uiSettings.setRotateGesturesEnabled(false);
+        uiSettings.setTiltGesturesEnabled(false);
     }
 }
