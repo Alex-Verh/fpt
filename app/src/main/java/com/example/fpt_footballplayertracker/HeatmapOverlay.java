@@ -40,6 +40,8 @@ public class HeatmapOverlay extends View {
 
             if (density > 5) {
                 paint.setColor(Color.argb(colorIntensity, 255, 0, 0));
+            } else if (density > 2) {
+                paint.setColor(Color.argb(colorIntensity, 255, 165, 0));
             } else {
                 paint.setColor(Color.argb(colorIntensity / 2, 0, 255, 0));
             }

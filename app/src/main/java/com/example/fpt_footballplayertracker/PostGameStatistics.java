@@ -6,7 +6,6 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -19,8 +18,6 @@ import java.util.TimeZone;
 
 public class PostGameStatistics extends AppCompatActivity {
 
-    private Handler handler;
-    private Runnable statisticsUpdater;
 
     // RealTimeStatistics variables
     private double topSpeed;
@@ -236,10 +233,8 @@ public class PostGameStatistics extends AppCompatActivity {
 
     @SuppressLint("DefaultLocale")
     public void loadStatistics() {
-        handler = new Handler();
-//        Random random = new Random();
 
-//        numberOfSprints += 1;
+
         wellBeing = topHeartRate > 180 ? "Warning" : "Good";
         calculatePerformance();
 
@@ -301,8 +296,5 @@ public class PostGameStatistics extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (handler != null) {
-            handler.removeCallbacks(statisticsUpdater);
-        }
     }
 }
