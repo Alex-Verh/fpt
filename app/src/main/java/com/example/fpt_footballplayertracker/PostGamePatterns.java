@@ -21,17 +21,25 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.Projection;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.GroundOverlayOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.MarkerOptions;
+
 import android.widget.FrameLayout.LayoutParams;
 
 
 public class PostGamePatterns extends AppCompatActivity implements OnMapReadyCallback {
-    private final double[] bottomLeftCorner = {52.242704, 6.850216};
-    private final double[] topLeftCorner = {52.243232, 6.848823};
-    private final double[] topRightCorner = {52.243797, 6.849397};
-    private final double[] bottomRightCorner = {52.243275, 6.850786};
+//    private final double[] bottomLeftCorner = {52.242704, 6.850216};
+//    private final double[] topLeftCorner = {52.243232, 6.848823};
+//    private final double[] topRightCorner = {52.243797, 6.849397};
+//    private final double[] bottomRightCorner = {52.243275, 6.850786};
+private final double[] bottomLeftCorner = {52.226655975016556, 6.8647907602634675};
+    private final double[] topLeftCorner = {52.22667979791006, 6.864679448598995};
+    private final double[] topRightCorner = {52.22672415774671, 6.864711635104385};
+    private final double[] bottomRightCorner = {52.226698691919985, 6.864817582351293};
     private FrameLayout footballPitch;
     int footballPitchWidth;
     int footballPitchHeight;
@@ -146,27 +154,15 @@ public class PostGamePatterns extends AppCompatActivity implements OnMapReadyCal
     }
 
     private void addMarkerOnOverlay(double latitude, double longitude, float rotation) {
-        // Convert latitude and longitude to screen coordinates
         LatLng position = new LatLng(latitude, longitude);
-        Projection projection = mMap.getProjection();
-        Point screenPoint = projection.toScreenLocation(position);
 
-        // Create a new ImageView for the marker
-        ImageView markerImage = new ImageView(this);
-        markerImage.setImageResource(R.drawable.movement_pattern_arrow);
-        markerImage.setRotation(rotation);
+        MarkerOptions markerOptions = new MarkerOptions()
+                .position(position)
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.movement_pattern_arrow))
+                .anchor(0.5f, 0.5f)
+                .rotation(rotation);
 
-        // Set the position of the marker
-        LayoutParams layoutParams = new LayoutParams(
-                LayoutParams.WRAP_CONTENT,
-                LayoutParams.WRAP_CONTENT
-        );
-        layoutParams.leftMargin = screenPoint.x - (markerImage.getDrawable().getIntrinsicWidth() / 2);
-        layoutParams.topMargin = screenPoint.y - (markerImage.getDrawable().getIntrinsicHeight() / 2);
-        markerImage.setLayoutParams(layoutParams);
-
-        // Add the marker ImageView to the FrameLayout on top of the overlay image
-        footballPitch.addView(markerImage);
+        mMap.addMarker(markerOptions);
     }
 
     @Override
@@ -177,6 +173,18 @@ public class PostGamePatterns extends AppCompatActivity implements OnMapReadyCal
         LatLng topLeft = new LatLng(topLeftCorner[0], topLeftCorner[1]);
         LatLng topRight = new LatLng(topRightCorner[0], topRightCorner[1]);
         LatLng bottomRight = new LatLng(bottomRightCorner[0], bottomRightCorner[1]);
+
+        LatLngBounds footballFieldBounds = new LatLngBounds(
+                new LatLng(bottomLeftCorner[0], bottomLeftCorner[1]),  // southwest corner
+                new LatLng(topRightCorner[0], topRightCorner[1])       // northeast corner
+        );
+
+        GroundOverlayOptions footballOverlay = new GroundOverlayOptions()
+                .image(BitmapDescriptorFactory.fromResource(R.drawable.football_field_image))
+                .positionFromBounds(footballFieldBounds)
+                .transparency(0.3f);
+
+        mMap.addGroundOverlay(footballOverlay);
 
         LatLngBounds.Builder builder = new LatLngBounds.Builder();
         builder.include(bottomLeft);
