@@ -59,6 +59,7 @@ public class PostGameHeatmap extends AppCompatActivity implements OnMapReadyCall
     private DatabaseHelper dbHelper;
     long startTimestamp;
     long endTimestamp;
+    private boolean firstTimeToLoad = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -160,7 +161,10 @@ public class PostGameHeatmap extends AppCompatActivity implements OnMapReadyCall
             @Override
             public void onFinish() {
                 // add all player positions
-                loadPositionsData(startTimestamp, endTimestamp);
+                if (firstTimeToLoad) {
+                    loadPositionsData(startTimestamp, endTimestamp);
+                    firstTimeToLoad = false;
+                }
                 List<PointF> screenPositions = convertToScreenPositions(playerPositions);
 
                 heatmapOverlay = new HeatmapOverlay(PostGameHeatmap.this, screenPositions);
@@ -168,12 +172,7 @@ public class PostGameHeatmap extends AppCompatActivity implements OnMapReadyCall
             }
 
             @Override
-            public void onCancel() {
-                loadPositionsData(startTimestamp, endTimestamp);
-                List<PointF> screenPositions = convertToScreenPositions(playerPositions);
-
-                heatmapOverlay = new HeatmapOverlay(PostGameHeatmap.this, screenPositions);
-                footballPitch.addView(heatmapOverlay);
+            public void onCancel() {;
             }
         });
 

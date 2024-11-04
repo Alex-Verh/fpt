@@ -69,6 +69,7 @@ public class PostGamePatterns extends AppCompatActivity implements OnMapReadyCal
     private DatabaseHelper dbHelper;
     long startTimestamp;
     long endTimestamp;
+    private boolean firstTimeToLoad = true;
 
     @SuppressLint("WrongViewCast")
     @Override
@@ -277,7 +278,10 @@ public class PostGamePatterns extends AppCompatActivity implements OnMapReadyCal
         uiSettings.setTiltGesturesEnabled(false);
 
         // add markers
-        loadSprintsData(startTimestamp, endTimestamp);
+        if (firstTimeToLoad) {
+            loadSprintsData(startTimestamp, endTimestamp);
+            firstTimeToLoad = false;
+        }
     }
 
 }

@@ -33,6 +33,7 @@ public class PostGameStatistics extends AppCompatActivity {
     private float performance;
 
     private DatabaseHelper dbHelper;
+    private boolean firstTimeToLoad = true;
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -83,9 +84,12 @@ public class PostGameStatistics extends AppCompatActivity {
         long endTimestamp = timeStamps[1];
 
         // actually get data from db and process it
-        loadGpsData(startTimestamp, endTimestamp);
-        loadPulseData(startTimestamp, endTimestamp);
-        loadSprintsData(startTimestamp, endTimestamp);
+        if (firstTimeToLoad) {
+            loadGpsData(startTimestamp, endTimestamp);
+            loadPulseData(startTimestamp, endTimestamp);
+            loadSprintsData(startTimestamp, endTimestamp);
+            firstTimeToLoad = false;
+        }
 
         Log.d("POST-GPS", "Hello! " + startTime + "-" + endTime + " " + date);
 
