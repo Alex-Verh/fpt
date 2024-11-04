@@ -91,7 +91,6 @@ public class RealTimeStatistics extends AppCompatActivity {
             try {
                 double newHeartRate = Double.parseDouble(payload.trim());
                 adjustHeartRate(newHeartRate);
-                // TODO: handle pulse data
 
                 Log.d("MQTT", "Pulse received: " + heartRate);
             } catch (NumberFormatException e) {
@@ -141,7 +140,6 @@ public class RealTimeStatistics extends AppCompatActivity {
                 double accelMagnitude = jsonObject.getDouble("Ax");
 
                 adjustSprints(accelMagnitude);
-                // TODO: handle accelerometer data
 
                 Log.d("MQTT", "Accelerometer data - Ax: " + accelX +
                         ", Ay: " + accelY + ", Az: " + accelZ + ", Amag: " + accelMagnitude);
@@ -160,12 +158,6 @@ public class RealTimeStatistics extends AppCompatActivity {
             @Override
             public void run() {
 
-//                Randomize speed
-//                currentSpeed = 15 + random.nextFloat() * 5;
-//                adjustTopSpeed(currentSpeed);
-
-//                adjustDistance(random.nextFloat() * 0.1f);
-//                numberOfSprints += 1;
                 wellBeing = averageHeartRate > 180 ? "Warning" : "Good";
 
                 TextView currentSpeedText = findViewById(R.id.currentSpeed);
@@ -225,7 +217,6 @@ public class RealTimeStatistics extends AppCompatActivity {
                 Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2)) *
                         Math.sin(dLon / 2) * Math.sin(dLon / 2);
         double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-//        return R * c; // dist in meters
         return R * c / 1000d; // dist in km
     }
 
