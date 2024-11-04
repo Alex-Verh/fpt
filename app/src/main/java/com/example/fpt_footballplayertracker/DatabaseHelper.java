@@ -223,6 +223,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             }
 
             double pulseRate = json.getDouble("pulseRate");
+
+            SQLiteDatabase db = this.getWritableDatabase();
+            String insertPulseData = "INSERT OR REPLACE INTO " + TABLE_PULSE + " (" +
+                    COLUMN_TIMESTAMP + ", " + COLUMN_PULSE_RATE + ") VALUES (?, ?)";
+            db.execSQL(insertPulseData, new Object[]{timestamp, pulseRate});
+            db.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
