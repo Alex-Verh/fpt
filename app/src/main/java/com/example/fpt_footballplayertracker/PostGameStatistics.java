@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.List;
 import java.util.TimeZone;
 
 public class PostGameStatistics extends AppCompatActivity {
@@ -44,6 +45,28 @@ public class PostGameStatistics extends AppCompatActivity {
 
         // ---------- Initialize DB Helper ---------- //
         dbHelper = new DatabaseHelper(this);
+
+        assert date != null;
+//        RANDOM HEART
+        List<String> payloadStrings = RandomPositionGenerator.generateRandomHearbeat();
+        Log.d("INSERT - FAKE", payloadStrings.toString());
+        for (String str : payloadStrings) {
+            dbHelper.insertPulseData(str);
+            Log.d("INSERT - FAKE - ADD - HEART", str);
+        }
+
+//        RANDOM POSITIONS
+        payloadStrings = RandomPositionGenerator.generateRandomPositions();
+        Log.d("INSERT - FAKE", payloadStrings.toString());
+        for (String str : payloadStrings) {
+            dbHelper.insertGpsData(str);
+            Log.d("INSERT - FAKE - ADD - POSITION", str);
+        }
+
+//        RANDOM SPRINTS
+        RandomPositionGenerator.generateRandomSprints(dbHelper);
+        Log.d("INSERT - FAKE", "SPRINTS");
+
 
         long[] timeStamps = convertTimestamps(startTime, endTime, date);
         long startTimestamp = timeStamps[0];

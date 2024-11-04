@@ -74,14 +74,6 @@ public class PostGameHeatmap extends AppCompatActivity implements OnMapReadyCall
         // ---------- Initialize DB Helper ---------- //
         dbHelper = new DatabaseHelper(this);
 
-        assert date != null;
-        List<String> payloadStrings = RandomPositionGenerator.generateRandomPositions();
-        Log.d("DABSIDSANBDU", payloadStrings.toString());
-        for (String str : payloadStrings) {
-//            dbHelper.insertGpsData(str);
-            Log.d("ADD - POSITION", str);
-        }
-
         long[] timeStamps = PostGameStatistics.convertTimestamps(startTime, endTime, date);
         startTimestamp = timeStamps[0];
         endTimestamp = timeStamps[1];
