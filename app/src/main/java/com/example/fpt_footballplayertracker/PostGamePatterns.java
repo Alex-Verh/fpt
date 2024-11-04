@@ -222,31 +222,52 @@ public class PostGamePatterns extends AppCompatActivity implements OnMapReadyCal
                 .tilt(0)
                 .build();
 
-        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition), new GoogleMap.CancelableCallback() {
-            @Override
-            public void onFinish() {
-                LatLngBounds visibleBounds = mMap.getProjection().getVisibleRegion().latLngBounds;
+        mMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
-                double visibleHeight = SphericalUtil.computeDistanceBetween(
-                        visibleBounds.southwest, new LatLng(visibleBounds.northeast.latitude, visibleBounds.southwest.longitude));
+        LatLngBounds visibleBounds = mMap.getProjection().getVisibleRegion().latLngBounds;
 
-                Bitmap overlayBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.football_field_image);
-                double aspectRatio = (double) overlayBitmap.getWidth() / overlayBitmap.getHeight();
+        double visibleHeight = SphericalUtil.computeDistanceBetween(
+                visibleBounds.southwest, new LatLng(visibleBounds.northeast.latitude, visibleBounds.southwest.longitude));
 
-                double overlayWidth = visibleHeight * aspectRatio;
+        Bitmap overlayBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.football_field_image);
+        double aspectRatio = (double) overlayBitmap.getWidth() / overlayBitmap.getHeight();
 
-                GroundOverlayOptions footballOverlay = new GroundOverlayOptions()
-                        .image(BitmapDescriptorFactory.fromBitmap(overlayBitmap))
-                        .position(centerPoint, (float) overlayWidth, (float) visibleHeight)
-                        .bearing(rotationAngle);
+        double overlayWidth = visibleHeight * aspectRatio;
 
-                mMap.addGroundOverlay(footballOverlay);
-            }
+        GroundOverlayOptions footballOverlay = new GroundOverlayOptions()
+                .image(BitmapDescriptorFactory.fromBitmap(overlayBitmap))
+                .position(centerPoint, (float) overlayWidth, (float) visibleHeight)
+                .bearing(rotationAngle);
 
-            @Override
-            public void onCancel() {
-            }
-        });
+        mMap.addGroundOverlay(footballOverlay);
+
+
+//        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition), new GoogleMap.CancelableCallback() {
+//            @Override
+//            public void onFinish() {
+//                LatLngBounds visibleBounds = mMap.getProjection().getVisibleRegion().latLngBounds;
+//
+//                double visibleHeight = SphericalUtil.computeDistanceBetween(
+//                        visibleBounds.southwest, new LatLng(visibleBounds.northeast.latitude, visibleBounds.southwest.longitude));
+//
+//                Bitmap overlayBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.football_field_image);
+//                double aspectRatio = (double) overlayBitmap.getWidth() / overlayBitmap.getHeight();
+//
+//                double overlayWidth = visibleHeight * aspectRatio;
+//
+//                GroundOverlayOptions footballOverlay = new GroundOverlayOptions()
+//                        .image(BitmapDescriptorFactory.fromBitmap(overlayBitmap))
+//                        .position(centerPoint, (float) overlayWidth, (float) visibleHeight)
+//                        .bearing(rotationAngle);
+//
+//                mMap.addGroundOverlay(footballOverlay);
+//            }
+//
+//            @Override
+//            public void onCancel() {
+//            }
+//        });
+
 
 //      Unable zoom and scroll on map
         UiSettings uiSettings = mMap.getUiSettings();

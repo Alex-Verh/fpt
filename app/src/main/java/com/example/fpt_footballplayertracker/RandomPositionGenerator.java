@@ -20,7 +20,6 @@ public class RandomPositionGenerator {
     private static final double[] bottomRightCorner = {52.24273847129517, 6.8521556030598605};
 
 
-
     // ION ograda
 //    private static final double[] bottomLeftCorner = {52.226655975016556, 6.8647907602634675};
 //    private static final double[] topLeftCorner = {52.22667979791006, 6.864679448598995};
@@ -29,7 +28,7 @@ public class RandomPositionGenerator {
 
     private static final int NUM_POSITIONS = 70; // Number of random positions to generate
     private static final Random random = new Random();
-    private static final String DATE = "2024-10-24";
+    private static final String DATE = "2024-11-03";
 
     public static void main(String[] args) {
         List<String> payloadStrings = generateRandomPositions();
@@ -43,8 +42,8 @@ public class RandomPositionGenerator {
     public static List<String> generateRandomPositions() {
         List<String> payloadStrings = new ArrayList<>();
         for (int i = 0; i < NUM_POSITIONS; i++) {
-            double lat = getRandomLatitude();
-            double lon = getRandomLongitude();
+            double lat = getRandomLatitude() + 0.0002;
+            double lon = getRandomLongitude() - 0.0002;;
 
             String datetimeUtc = generateRandomTimestamp(DATE);
             String payloadString = String.format(Locale.US, "{'datetime_utc': '%s', 'lat': %.15f, 'lat_dir': '', 'lon': %.15f, 'lon_dir': '', 'speed': '%.2f', 'course': '%.2f'}",
@@ -56,9 +55,9 @@ public class RandomPositionGenerator {
 
     public static List<String> generateRandomSprints() {
         List<String> payloadStrings = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            double lat = getRandomLatitude();
-            double lon = getRandomLongitude();
+        for (int i = 0; i < 20; i++) {
+            double lat = getRandomLatitude() + 0.0002;
+            double lon = getRandomLongitude() - 0.0002;
             String datetimeUtc = generateRandomTimestamp(DATE);
             String payloadString = String.format(Locale.US, "{'datetime_utc': '%s', 'lat': %.15f, 'lon': %.15f, 'course': '%.2f'}",
                     datetimeUtc, lat, lon, random.nextDouble() * 360);

@@ -177,7 +177,6 @@ public class RealTimeStatistics extends AppCompatActivity {
                 if (heartRate > 180) {
                     wellBeing = "Warning";
                     wellBeingfield.setBackgroundColor(ContextCompat.getColor(RealTimeStatistics.this, R.color.warning));
-
                 } else {
                     wellBeing = "Good";
                     wellBeingfield.setBackgroundColor(ContextCompat.getColor(RealTimeStatistics.this, R.color.good));
