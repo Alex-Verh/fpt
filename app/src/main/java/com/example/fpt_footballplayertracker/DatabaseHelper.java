@@ -204,6 +204,30 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
+    public void insertRawPulseData(String payload) {
+        try {
+            JSONObject json = new JSONObject(payload);
+
+            // convert datetime_utc to milliseconds
+            String utcString = json.getString("datetime_utc");
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            sdf.setTimeZone(TimeZone.getTimeZone("UTC")); // Set to UTC
+
+            // in case if parsing fails, store current millis instead
+            long timestamp = System.currentTimeMillis();
+            try {
+                Date date = sdf.parse(utcString);
+                timestamp = date.getTime();
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+            double pulseRate = json.getDouble("pulseRate");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public void insertPulseData(String payload) {
         try {
             long timestamp = System.currentTimeMillis();
