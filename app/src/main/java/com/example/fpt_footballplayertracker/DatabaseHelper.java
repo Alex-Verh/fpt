@@ -115,6 +115,37 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
+    public void insertRawSprintsData(String payload) {
+        try {
+            JSONObject json = new JSONObject(payload);
+
+            // convert datetime_utc to milliseconds
+            String utcString = json.getString("datetime_utc");
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            sdf.setTimeZone(TimeZone.getTimeZone("UTC")); // Set to UTC
+
+            // in case if parsing fails, store current millis instead
+            long timestamp = System.currentTimeMillis();
+            try {
+                Date date = sdf.parse(utcString);
+                timestamp = date.getTime();
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            double lat = json.getDouble("lat");
+            double lon = json.getDouble("lon");
+            double course = json.getDouble("course");
+
+            SQLiteDatabase db = this.getWritableDatabase();
+            String insertSprintData = "INSERT OR REPLACE INTO " + TABLE_SPRINTS + " (" +
+                    COLUMN_TIMESTAMP + ", " + COLUMN_LAT + ", " + COLUMN_LON + ", " + COLUMN_COURSE + ") VALUES (?, ?, ?, ?)";
+            db.execSQL(insertSprintData, new Object[]{timestamp, lat, lon, course});
+            db.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public void insertGpsData(String payload) {
         try {
             JSONObject json = new JSONObject(payload);
@@ -133,9 +164,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 e.printStackTrace();
             }
 
-            String lat = json.getString("lat");
+            double lat = json.getDouble("lat");
             String latDir = json.getString("lat_dir");
-            String lon = json.getString("lon");
+            double lon = json.getDouble("lon");
             String lonDir = json.getString("lon_dir");
             double speed = json.getDouble("speed");
             double course = json.getDouble("course");

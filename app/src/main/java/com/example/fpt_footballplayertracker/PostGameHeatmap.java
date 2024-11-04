@@ -79,6 +79,7 @@ public class PostGameHeatmap extends AppCompatActivity implements OnMapReadyCall
         Log.d("DABSIDSANBDU", payloadStrings.toString());
         for (String str : payloadStrings) {
 //            dbHelper.insertGpsData(str);
+
             Log.d("ADD - POSITION", str);
         }
 
