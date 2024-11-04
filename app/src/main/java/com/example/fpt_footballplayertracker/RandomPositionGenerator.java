@@ -14,6 +14,7 @@ public class RandomPositionGenerator {
 
     private static final int NUM_POSITIONS = 100; // Number of random positions to generate
     private static final Random random = new Random();
+    private static final String DATE = "2024-11-02";
 
     public static void main(String[] args) {
         List<String> payloadStrings = generateRandomPositions();
@@ -29,13 +30,36 @@ public class RandomPositionGenerator {
         for (int i = 0; i < NUM_POSITIONS; i++) {
             double lat = getRandomLatitude();
             double lon = getRandomLongitude();
-            String datetimeUtc = generateRandomTimestamp("2024-11-06");
+            String datetimeUtc = generateRandomTimestamp(DATE);
             String payloadString = String.format(Locale.US, "{'datetime_utc': '%s', 'lat': %.15f, 'lat_dir': '', 'lon': %.15f, 'lon_dir': '', 'speed': 0, 'course': '%.2f'}",
                     datetimeUtc, lat, lon, random.nextDouble() * 360);
             payloadStrings.add(payloadString);
         }
-        return payloadStrings; // Return the list of payload strings
+        return payloadStrings;
     }
+
+    public static void generateRandomSprints(DatabaseHelper db) {
+        List<String> payloadStrings = new ArrayList<>();
+        for (int i = 0; i < NUM_POSITIONS; i++) {
+            double lat = getRandomLatitude();
+            double lon = getRandomLongitude();
+            double course = random.nextDouble() * 360;
+            db.insertSprintsData(lat, lon, course);
+        }
+    }
+
+    public static List<String> generateRandomHearbeat() {
+        List<String> payloadStrings = new ArrayList<>();
+        for (int i = 0; i < NUM_POSITIONS; i++) {
+            String datetimeUtc = generateRandomTimestamp(DATE);
+
+            String payloadString = String.format(Locale.US, "{'datetime_utc': '%s', 'pulseRate': '%.2f'}",
+                    datetimeUtc, 80 + random.nextDouble() * 50);
+            payloadStrings.add(payloadString);
+        }
+        return payloadStrings;
+    }
+
 
     // Generate a random latitude within the pitch boundaries
     private static double getRandomLatitude() {

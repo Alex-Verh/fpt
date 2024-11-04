@@ -33,18 +33,16 @@ public class RealTimePositioning extends AppCompatActivity implements OnMapReady
 
     // RELATIVE POSITIONING OF THE PLAYER ON THE FOOTBALL PITCH ( THE IMAGE RELATIVE TO Kunstgrasveld Enschede)
 //    Kunstgrasveld
-    private final double[] bottomLeftCorner = {52.242704, 6.850216};
-    private final double[] topLeftCorner = {52.243232, 6.848823};
-    private final double[] topRightCorner = {52.243797, 6.849397};
-    private final double[] bottomRightCorner = {52.243275, 6.850786};
+//    private final double[] bottomLeftCorner = {52.242704, 6.850216};
+//    private final double[] topLeftCorner = {52.243232, 6.848823};
+//    private final double[] topRightCorner = {52.243797, 6.849397};
+//    private final double[] bottomRightCorner = {52.243275, 6.850786};
 
     //    Natural grass field
-//    private final double[] bottomLeftCorner = {52.24220658064753, 6.851613173106319};
-//    private final double[] topLeftCorner = {52.24269782485437, 6.850296926995616};
-//    private final double[] topRightCorner = {52.24322738698686, 6.850835563732699};
-//    private final double[] bottomRightCorner = {52.24273847129517, 6.8521556030598605};
-
-
+    private final double[] bottomLeftCorner = {52.24220658064753, 6.851613173106319};
+    private final double[] topLeftCorner = {52.24269782485437, 6.850296926995616};
+    private final double[] topRightCorner = {52.24322738698686, 6.850835563732699};
+    private final double[] bottomRightCorner = {52.24273847129517, 6.8521556030598605};
 
     // ION ograda
 //    private final double[] bottomLeftCorner = {52.226655975016556, 6.8647907602634675};
