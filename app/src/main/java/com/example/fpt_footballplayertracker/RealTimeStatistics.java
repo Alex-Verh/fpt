@@ -1,8 +1,10 @@
 package com.example.fpt_footballplayertracker;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -10,6 +12,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.json.JSONException;
@@ -26,9 +29,13 @@ public class RealTimeStatistics extends AppCompatActivity {
     private double topSpeed = 0;
     private double currentSpeed;
     private double averageSpeed = 0;
+    private double totalSpeed = 0;
+    private int speedCount = 0;
 
     private double heartRate;
     private double averageHeartRate;
+    private double totalHeartRate = 0;
+    private int heartRateCount = 0;
 
     private boolean firstDistUpdate = true;
     private double lastLat = 0;
@@ -151,14 +158,41 @@ public class RealTimeStatistics extends AppCompatActivity {
 
     public void loadStatistics() {
         handler = new Handler();
-        Random random = new Random();
-
         statisticsUpdater = new Runnable() {
             @SuppressLint("DefaultLocale")
             @Override
             public void run() {
 
-                wellBeing = averageHeartRate > 180 ? "Warning" : "Good";
+                LinearLayout wellBeingfield = findViewById(R.id.general_wellbeing);
+                LinearLayout heartRateField = findViewById(R.id.heart_rate_field);
+                LinearLayout topSpeedField = findViewById(R.id.top_speed_field);
+
+                if (averageHeartRate > 180) {
+                    heartRateField.setBackgroundColor(ContextCompat.getColor(RealTimeStatistics.this, R.color.alert));
+
+                } else {
+                    heartRateField.setBackgroundColor(ContextCompat.getColor(RealTimeStatistics.this, R.color.white));
+                }
+
+                if (heartRate > 180) {
+                    wellBeing = "Warning";
+                    wellBeingfield.setBackgroundColor(ContextCompat.getColor(RealTimeStatistics.this, R.color.warning));
+
+                } else {
+                    wellBeing = "Good";
+                    wellBeingfield.setBackgroundColor(ContextCompat.getColor(RealTimeStatistics.this, R.color.good));
+                }
+
+                if (topSpeed > 10) {
+                    topSpeedField.setBackgroundColor(ContextCompat.getColor(RealTimeStatistics.this, R.color.good));
+
+                } else {
+                    topSpeedField.setBackgroundColor(ContextCompat.getColor(RealTimeStatistics.this, R.color.white));
+                }
+
+
+                TextView currentWellbeing = findViewById(R.id.wellbeing);
+                currentWellbeing.setText(String.valueOf(RealTimeStatistics.this.wellBeing));
 
                 TextView currentSpeedText = findViewById(R.id.currentSpeed);
                 currentSpeedText.setText(String.format("%.2f km/h", RealTimeStatistics.this.currentSpeed));
@@ -181,8 +215,7 @@ public class RealTimeStatistics extends AppCompatActivity {
                 TextView numberOfSprints = findViewById(R.id.numberOfSprints);
                 numberOfSprints.setText(String.valueOf(RealTimeStatistics.this.numberOfSprints));
 
-                TextView currentWellbeing = findViewById(R.id.wellbeing);
-                currentWellbeing.setText(String.valueOf(RealTimeStatistics.this.wellBeing));
+
 
                 handler.postDelayed(this, 1000);
             }
@@ -232,17 +265,25 @@ public class RealTimeStatistics extends AppCompatActivity {
     }
 
     private void adjustSpeed(double newSpeed) {
+        totalSpeed += newSpeed;
+        speedCount++;
+
+        averageSpeed = totalSpeed / speedCount;
+
         currentSpeed = newSpeed;
 
         if (currentSpeed > topSpeed){
             topSpeed = currentSpeed;
         }
-        averageSpeed = (averageSpeed + currentSpeed) / 2;
     }
 
     private void adjustHeartRate(double newHeartRate){
+        totalHeartRate += newHeartRate;
+        heartRateCount++;
+
+        averageHeartRate = totalHeartRate / heartRateCount;
+
         heartRate = newHeartRate;
-        averageHeartRate = (averageHeartRate + newHeartRate) / 2;
     }
 
     @Override

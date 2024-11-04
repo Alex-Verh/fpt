@@ -106,7 +106,7 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:padding="13dp"
-                    android:background="#D4EDDA">
+                    android:background="#FFFFFF">
                     <ImageView
                         android:layout_width="30dp"
                         android:layout_height="20dp"
@@ -201,6 +201,7 @@
 
                 <!-- Average Heart Rate -->
                 <LinearLayout
+                    android:id="@+id/heart_rate_field"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
@@ -300,6 +301,7 @@
 
                 <!-- General Well-being -->
                 <LinearLayout
+                    android:id="@+id/general_wellbeing"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
@@ -324,7 +326,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Tired"
+                        android:text="Warning"
                         android:fontFamily="@font/mallana"
                         android:id="@+id/wellbeing"
                         android:textColor="#000000"
@@ -333,6 +335,7 @@
 
                 <!-- Performance Result -->
                 <LinearLayout
+                    android:id="@+id/top_speed_field"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"

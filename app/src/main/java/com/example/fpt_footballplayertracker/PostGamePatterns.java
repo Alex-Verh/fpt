@@ -41,16 +41,16 @@ import org.json.JSONObject;
 
 public class PostGamePatterns extends AppCompatActivity implements OnMapReadyCallback {
 //    Kunstgrasveld
-    private final double[] bottomLeftCorner = {52.242704, 6.850216};
-    private final double[] topLeftCorner = {52.243232, 6.848823};
-    private final double[] topRightCorner = {52.243797, 6.849397};
-    private final double[] bottomRightCorner = {52.243275, 6.850786};
+//    private final double[] bottomLeftCorner = {52.242704, 6.850216};
+//    private final double[] topLeftCorner = {52.243232, 6.848823};
+//    private final double[] topRightCorner = {52.243797, 6.849397};
+//    private final double[] bottomRightCorner = {52.243275, 6.850786};
 
     //    Natural grass field
-//    private final double[] bottomLeftCorner = {52.24220658064753, 6.851613173106319};
-//    private final double[] topLeftCorner = {52.24269782485437, 6.850296926995616};
-//    private final double[] topRightCorner = {52.24322738698686, 6.850835563732699};
-//    private final double[] bottomRightCorner = {52.24273847129517, 6.8521556030598605};
+    private final double[] bottomLeftCorner = {52.24220658064753, 6.851613173106319};
+    private final double[] topLeftCorner = {52.24269782485437, 6.850296926995616};
+    private final double[] topRightCorner = {52.24322738698686, 6.850835563732699};
+    private final double[] bottomRightCorner = {52.24273847129517, 6.8521556030598605};
 
 
 
@@ -84,26 +84,11 @@ public class PostGamePatterns extends AppCompatActivity implements OnMapReadyCal
 
         // ---------- Initialize DB Helper ---------- //
         dbHelper = new DatabaseHelper(this);
-        // TODO: remove this line
-//        dbHelper.insertSprintsData(52.242377856892794, 6.851441534664767, 0);
-//        dbHelper.insertSprintsData(52.24260281282532, 6.851509809267719, 60);
-//        dbHelper.insertSprintsData(52.242708322737094, 6.851925959228571, 270);
-//        dbHelper.insertSprintsData(52.242659176468024, 6.851195827314727, 210);
-//        dbHelper.insertSprintsData(52.24255734963551, 6.850664749975794, 0);
-
-
-//        dbHelper.insertSprintsData(52.242377856892794, 6.851441534664767, 0);
-//        dbHelper.insertSprintsData(52.24260281282532, 6.851509809267719, 60);
-//        dbHelper.insertSprintsData(52.242708322737094, 6.851925959228571, 270);
-//        dbHelper.insertSprintsData(52.242659176468024, 6.851195827314727, 210);
-//        dbHelper.insertSprintsData(52.24255734963551, 6.850664749975794, 0);
 
         assert date != null;
         long[] timeStamps = PostGameStatistics.convertTimestamps(startTime, endTime, date);
         startTimestamp = timeStamps[0];
         endTimestamp = timeStamps[1];
-
-//        loadSprintsData(startTimestamp, endTimestamp);
 
         // Remove the ActionBar
         if (getSupportActionBar() != null) {

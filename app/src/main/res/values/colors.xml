@@ -17,5 +17,7 @@
     <color name="button_text_inactive">#FFFFFF</color>
     <color name="player_marker_color">#FFFFFF</color>
     <color name="navbtn">#6D6D6D</color>
-
+    <color name="warning">#FFF3CD</color>
+    <color name="alert">#F8D7DA</color>
+    <color name="good">#D4EDDA</color>
 </resources>

@@ -108,6 +108,7 @@
 
                 <!-- Top Speed -->
                 <LinearLayout
+                    android:id="@+id/top_speed_field"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
@@ -174,6 +175,7 @@
 
                 <!-- Top Heart Rate -->
                 <LinearLayout
+                    android:id="@+id/heart_rate_field"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
@@ -207,6 +209,7 @@
 
                 <!-- Average Heart Rate -->
                 <LinearLayout
+                    android:id="@+id/average_heart_field"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
@@ -306,6 +309,7 @@
 
                 <!-- General Well-being -->
                 <LinearLayout
+                    android:id="@+id/general_wellbeing"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
@@ -330,7 +334,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Tired"
+                        android:text="Warning"
                         android:fontFamily="@font/mallana"
                         android:id="@+id/wellbeing"
                         android:textColor="#000000"
@@ -339,6 +343,7 @@
 
                 <!-- Performance Result -->
                 <LinearLayout
+                    android:id="@+id/performance_field"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
@@ -364,7 +369,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/mallana"
-                        android:text="9.5"
+                        android:text="9.5 / 10.0"
                         android:id="@+id/performance"
                         android:textColor="#000000"
                         android:textSize="16sp" />

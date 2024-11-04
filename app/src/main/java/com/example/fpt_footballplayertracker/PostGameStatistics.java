@@ -1,6 +1,7 @@
 package com.example.fpt_footballplayertracker;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -10,6 +11,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.text.ParseException;
@@ -46,26 +48,34 @@ public class PostGameStatistics extends AppCompatActivity {
         // ---------- Initialize DB Helper ---------- //
         dbHelper = new DatabaseHelper(this);
 
-        assert date != null;
-//        RANDOM HEART
-        List<String> payloadStrings = RandomPositionGenerator.generateRandomHearbeat();
-        Log.d("INSERT - FAKE", payloadStrings.toString());
-        for (String str : payloadStrings) {
-            dbHelper.insertPulseData(str);
-            Log.d("INSERT - FAKE - ADD - HEART", str);
-        }
 
-//        RANDOM POSITIONS
-        payloadStrings = RandomPositionGenerator.generateRandomPositions();
-        Log.d("INSERT - FAKE", payloadStrings.toString());
-        for (String str : payloadStrings) {
-            dbHelper.insertGpsData(str);
-            Log.d("INSERT - FAKE - ADD - POSITION", str);
-        }
-
-//        RANDOM SPRINTS
-        RandomPositionGenerator.generateRandomSprints(dbHelper);
-        Log.d("INSERT - FAKE", "SPRINTS");
+//        // ---------- Initialize FAKE DATA ---------- //
+//
+//        assert date != null;
+////        RANDOM HEART
+//        List<String> payloadStrings = RandomPositionGenerator.generateRandomHearbeat();
+//        Log.d("INSERT - FAKE", payloadStrings.toString());
+//        for (String str : payloadStrings) {
+//            dbHelper.insertRawPulseData(str);
+//            Log.d("INSERT - FAKE - ADD - HEART", str);
+//        }
+//
+////        RANDOM POSITIONS
+//        payloadStrings = RandomPositionGenerator.generateRandomPositions();
+//        Log.d("INSERT - FAKE", payloadStrings.toString());
+//        for (String str : payloadStrings) {
+//            dbHelper.insertGpsData(str);
+//            Log.d("INSERT - FAKE - ADD - POSITION", str);
+//        }
+//
+////        RANDOM SPRINTS
+//        payloadStrings = RandomPositionGenerator.generateRandomSprints();
+//        Log.d("INSERT - FAKE", payloadStrings.toString());
+//        for (String str : payloadStrings) {
+//            dbHelper.insertRawSprintsData(str);
+//            Log.d("INSERT - FAKE - ADD - SPRINT", str);
+//        }
+//        // ---------- FINISH FAKE DATA ---------- //
 
 
         long[] timeStamps = convertTimestamps(startTime, endTime, date);
@@ -254,12 +264,47 @@ public class PostGameStatistics extends AppCompatActivity {
         }
     }
 
-    @SuppressLint("DefaultLocale")
+    @SuppressLint({"DefaultLocale", "SetTextI18n"})
     public void loadStatistics() {
 
 
-        wellBeing = topHeartRate > 180 ? "Warning" : "Good";
+        LinearLayout wellBeingfield = findViewById(R.id.general_wellbeing);
+        LinearLayout heartRateField = findViewById(R.id.heart_rate_field);
+        LinearLayout averageHeartField = findViewById(R.id.average_heart_field);
+        LinearLayout topSpeedField = findViewById(R.id.top_speed_field);
+        LinearLayout performanceField = findViewById(R.id.performance_field);
+
+        if (averageHeartRate > 180) {
+            wellBeingfield.setBackgroundColor(ContextCompat.getColor(PostGameStatistics.this, R.color.warning));
+            averageHeartField.setBackgroundColor(ContextCompat.getColor(PostGameStatistics.this, R.color.alert));
+            wellBeing = "Warning";
+
+        } else {
+            wellBeingfield.setBackgroundColor(ContextCompat.getColor(PostGameStatistics.this, R.color.good));
+            averageHeartField.setBackgroundColor(ContextCompat.getColor(PostGameStatistics.this, R.color.white));
+            wellBeing = "Good";
+        }
+
+        if (topHeartRate > 170) {
+            heartRateField.setBackgroundColor(ContextCompat.getColor(PostGameStatistics.this, R.color.alert));
+
+        } else {
+            heartRateField.setBackgroundColor(ContextCompat.getColor(PostGameStatistics.this, R.color.white));
+        }
+
+        if (topSpeed > 10) {
+            topSpeedField.setBackgroundColor(ContextCompat.getColor(PostGameStatistics.this, R.color.good));
+        } else {
+            topSpeedField.setBackgroundColor(ContextCompat.getColor(PostGameStatistics.this, R.color.white));
+        }
+
         calculatePerformance();
+
+        if (performance > 5) {
+            performanceField.setBackgroundColor(ContextCompat.getColor(PostGameStatistics.this, R.color.good));
+        } else {
+            performanceField.setBackgroundColor(ContextCompat.getColor(PostGameStatistics.this, R.color.white));
+        }
 
         TextView topSpeed = findViewById(R.id.topSpeed);
         topSpeed.setText(String.format("%.2f km/h", PostGameStatistics.this.topSpeed));
@@ -280,7 +325,7 @@ public class PostGameStatistics extends AppCompatActivity {
         numberOfSprints.setText(String.valueOf(PostGameStatistics.this.numberOfSprints));
 
         TextView performance = findViewById(R.id.performance);
-        performance.setText(String.valueOf(PostGameStatistics.this.performance));
+        performance.setText(PostGameStatistics.this.performance + "/10.0");
 
         TextView currentWellbeing = findViewById(R.id.wellbeing);
         currentWellbeing.setText(String.valueOf(PostGameStatistics.this.wellBeing));

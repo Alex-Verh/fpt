@@ -29,16 +29,16 @@ import java.util.List;
 public class PostGameHeatmap extends AppCompatActivity implements OnMapReadyCallback {
 
     //    Kunstgrasveld
-    private final double[] bottomLeftCorner = {52.242704, 6.850216};
-    private final double[] topLeftCorner = {52.243232, 6.848823};
-    private final double[] topRightCorner = {52.243797, 6.849397};
-    private final double[] bottomRightCorner = {52.243275, 6.850786};
+//    private final double[] bottomLeftCorner = {52.242704, 6.850216};
+//    private final double[] topLeftCorner = {52.243232, 6.848823};
+//    private final double[] topRightCorner = {52.243797, 6.849397};
+//    private final double[] bottomRightCorner = {52.243275, 6.850786};
 
     //    Natural grass field
-//    private final double[] bottomLeftCorner = {52.24220658064753, 6.851613173106319};
-//    private final double[] topLeftCorner = {52.24269782485437, 6.850296926995616};
-//    private final double[] topRightCorner = {52.24322738698686, 6.850835563732699};
-//    private final double[] bottomRightCorner = {52.24273847129517, 6.8521556030598605};
+    private final double[] bottomLeftCorner = {52.24220658064753, 6.851613173106319};
+    private final double[] topLeftCorner = {52.24269782485437, 6.850296926995616};
+    private final double[] topRightCorner = {52.24322738698686, 6.850835563732699};
+    private final double[] bottomRightCorner = {52.24273847129517, 6.8521556030598605};
 
 
 
